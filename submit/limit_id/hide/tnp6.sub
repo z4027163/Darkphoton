@@ -1,0 +1,25 @@
+executable = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/thejob_id.sh 
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ""
+transfer_output_files = ""
+MyIndex=$(ProcId)+1000
+Extention=$INT(MyIndex,%d)
+arguments = "tree_$(Extention).root 2018D2"
+universe = vanilla
+queue 286
+#log = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).log
+#output = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).out
+#error = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).err
++JobFlavour = "workday"
+#queue INPUT from data17Dlist.list
+#queue INPUT from lousyList3.list
+
+
+# or
+# queue INPUT in (
+# file1
+# file2
+# file3
+# ..
+# )

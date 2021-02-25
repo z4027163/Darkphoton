@@ -1,0 +1,58 @@
+executable = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/thejob_id.sh 
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ""
+transfer_output_files = ""
+queue arguments from (
+   "tree_182.root 2017C"
+   "tree_219.root 2017C"
+   "tree_221.root 2017C"
+   "tree_229.root 2017C"
+   "tree_232.root 2017C"
+   "tree_173.root 2017D"
+   "tree_181.root 2017D"
+   "tree_182.root 2017D"
+   "tree_186.root 2017D"
+   "tree_195.root 2017D"
+   "tree_237.root 2017E"
+   "tree_351.root 2017E"
+   "tree_117.root 2017F"
+   "tree_120.root 2017F"
+   "tree_123.root 2017F"
+   "tree_276.root 2017F"
+   "tree_279.root 2017F"
+   "tree_280.root 2017F"
+   "tree_367.root 2017F"
+   "tree_370.root 2017F"
+   "tree_399.root 2017F"
+   "tree_400.root 2017F"
+   "tree_412.root 2017F"
+   "tree_420.root 2017F"
+   "tree_424.root 2017F"
+   "tree_434.root 2017F"
+   "tree_437.root 2017F"
+   "tree_440.root 2017F"
+   "tree_444.root 2017F"
+   "tree_447.root 2017F"
+   "tree_451.root 2017F"
+   "tree_54.root 2017F"
+   "tree_75.root 2017F"
+   "tree_76.root 2017F"
+   "tree_233.root 2018A"
+   "tree_35.root 2018B"
+   "tree_257.root 2018B"
+   "tree_35.root 2018B"
+   "tree_249.root 2018D1"
+   "tree_251.root 2018D1"
+)
+universe = vanilla
++JobFlavour = "espresso"
+
+
+# or
+# queue INPUT in (
+# file1
+# file2
+# file3
+# ..
+# )

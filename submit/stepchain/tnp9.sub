@@ -1,0 +1,23 @@
+executable = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/stepchain_2017.sh 
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ""
+transfer_output_files = ""
+arguments = "scout_$(ProcId).root 2017/ScoutingRunE/ScoutingCaloMuon/crab_20200617_140405/200617_120422/0000/ 2017E"
+universe = vanilla
+queue 435
+#log = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).log
+#output = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).out
+#error = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).err
++JobFlavour = "espresso"
+#queue INPUT from data17Dlist.list
+#queue INPUT from lousyList3.list
+
+
+# or
+# queue INPUT in (
+# file1
+# file2
+# file3
+# ..
+# )
