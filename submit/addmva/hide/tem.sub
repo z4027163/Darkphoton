@@ -1,15 +1,20 @@
 executable = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/addmva.sh
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
+output = log/$(Process).stdout
+error = log/$(Process).stderr
+log = log/$(Process).log
 transfer_input_files = ""
 transfer_output_files = ""
 universe = vanilla
-output = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/submit/addmva/hide/log/log_$(Process).out
-error =/afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/submit/addmva/hide/log/log_$(Process).err
-log = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/submit/addmva/hide/log/log_$(Process).log
 queue arguments from (
-    "tree_188.root   2018A  2018"
-    "tree_257.root   2018A  2018"
-    "tree_714.root   2018D1  2018"
+    "tree_390.root   2017F  2017"
+    "tree_391.root   2017F  2017"
+    "tree_466.root   2017F  2017"
+    "tree_205.root   2018A  2018"
+    "tree_307.root   2018A  2018"
+    "tree_828.root   2018D1  2018"
+    "tree_1250.root   2018D2  2018"
 )
+
 +JobFlavour = "microcentury"

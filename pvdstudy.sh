@@ -15,3 +15,4 @@ out="/eos/user/w/wangz/darkphoton/IP/"$2"/"$out2
 echo $out
 
 root -l -b PVdstudy.C\(\"$2$in\"\,\"$out\"\,false\)
+#root -l -b PVdstudy.C\(\"$2$in\"\,\"$out\"\,false\)

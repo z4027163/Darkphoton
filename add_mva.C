@@ -51,7 +51,8 @@ void add_mva(string treepath = "tree_1.root", int year=2018, bool isMC=false) {
    for(unsigned int f=0; f<filesToRun.size(); f++){
     cout << filesToRun[f].c_str() << endl;
     TFile *fin = new TFile(filesToRun[f].c_str(),"UPDATE");
-    TTree *tree = (TTree*)fin->Get("tpTree/fitter_tree");
+//    TTree *tree = (TTree*)fin->Get("tpTree/fitter_tree");
+    TTree *tree = (TTree*)fin->Get("fitter_tree");
     int entries = tree->GetEntries();
 
 
@@ -121,6 +122,7 @@ void add_mva(string treepath = "tree_1.root", int year=2018, bool isMC=false) {
     }
 //    tree->Write("fitter_tree",TObject::kOverwrite);
     tree->Write(0,TObject::kWriteDelete,0);
+//    tree->Write();
     fin->Close();
    }
 }

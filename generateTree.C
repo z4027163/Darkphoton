@@ -61,6 +61,7 @@ void generateTree(string treepath = "scout_2.root", const char* outfilename = ".
     TTreeReaderValue<std::vector<unsigned char> >  nmhits   (reader, "nMuonHits"  );
     TTreeReaderValue<std::vector<unsigned char> >  nphits   (reader, "nPixelHits" );
     TTreeReaderValue<std::vector<unsigned char> >  ntklayers(reader, "nTkLayers"  );
+    TTreeReaderValue<std::vector<unsigned char> >  nstations (reader, "nStations"  );
     TTreeReaderValue<unsigned char>                hlt      (reader, "trig"       );
     TTreeReaderValue<unsigned>                     nverts   (reader, "nvtx"       );
     cout<<"here4"<<endl;
@@ -110,6 +111,7 @@ void generateTree(string treepath = "scout_2.root", const char* outfilename = ".
     int  m2phits    = 0.; 
     int  m2mhits = 0.;
     int  m2layer    = 0.; 
+    int  m2stat = 0;
     float  m2chi = 0.;
     float  m2trkiso = 0;
     float dR=-1;
@@ -140,12 +142,14 @@ void generateTree(string treepath = "scout_2.root", const char* outfilename = ".
     outtree->Branch("nmhits",&m2mhits,"m2mhits/I");
     outtree->Branch("chi",&m2chi,"m2chi/F");
     outtree->Branch("ntklayers",&m2layer,"ntklayers/I");
+    outtree->Branch("nstations",&m2stat,"nstations/I");
     outtree->Branch("m2id"  , &m2id  , "m2id/I"  );
     outtree->Branch("mass"  , &mass  , "mass/F"  );
     outtree->Branch("nvtx"  , &nvtx  , "nvtx/i"  );
     outtree->Branch("Run"   , &Run   , "Run/i"  );
     outtree->Branch("LumSec", &LumSec, "LumSec/i"  );
     outtree->Branch("dR", &dR,"dR/F");
+ 
     outtree->Branch("dxy",&Dxy,"dxy/F");
     outtree->Branch("dz",&Dz,"dz/F");
     outtree->Branch("vtxchi2",&vchi2,"vtxchi2/F");
@@ -186,7 +190,7 @@ void generateTree(string treepath = "scout_2.root", const char* outfilename = ".
         int nprob=0;
         for(std::size_t i = 1; i < mpt->size(); i++) {
              if(((*mpt)[i])<3 || fabs((*meta)[i])>1.9) continue;
-             if((*mcharge)[0]*(*mcharge)[i]<0) continue;
+             if((*mcharge)[0]*(*mcharge)[i]>0) continue;
              nprob++;
              idx2=i;
         }       
@@ -224,6 +228,7 @@ void generateTree(string treepath = "scout_2.root", const char* outfilename = ".
 //        cout << "iso=" << (*tkiso)[idx2] << endl;
         m2layer=(*ntklayers)[idx2];
         m2chi=(*chi2)[idx2];
+        m2stat = (*nstations)[idx2];
         if((*tkiso)[idx2]<0.15 && ((*nphits)[idx2] > 0) && (*ntklayers)[idx2] > 5 && (*chi2)[idx2] < 10.) m2id=1;
 	m2ch   = (*mcharge)[idx2];
 	

@@ -1,0 +1,35 @@
+
+!!! please give the directory of your TMVA installation you want to use as argument to  
+!!! source setup.sh <the TMVA installation directory>
+
+
+
+Processing add_mva.C("2017F/tree_466.root",2017)...
+/eos/user/w/wangz/darkphoton/2017F/tree_466.root
+--- Reader                   : Booking "BDT method" of type "BDT" from /eos/user/w/wangz/darkphoton/BDTweight/2017/upsilon0p03_PVd/TMVAClassification_BDT.weights.xml.
+--- MethodBase               : Reading weight file: /eos/user/w/wangz/darkphoton/BDTweight/2017/upsilon0p03_PVd/TMVAClassification_BDT.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.2.0
+--- BDT                      : MVA method was trained with ROOT Version: 5.34/18
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+--- Reader                   : Booking "BDT method" of type "BDT" from /eos/user/w/wangz/darkphoton/BDTweight/2017/jpsi0p015_sig/TMVAClassification_BDT.weights.xml.
+--- MethodBase               : Reading weight file: /eos/user/w/wangz/darkphoton/BDTweight/2017/jpsi0p015_sig/TMVAClassification_BDT.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.2.0
+--- BDT                      : MVA method was trained with ROOT Version: 5.34/18
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+total=91484
+entry=0
+entry=10000
+entry=20000
+entry=30000
+entry=40000
+entry=50000
+entry=60000
+entry=70000
+entry=80000
+entry=90000

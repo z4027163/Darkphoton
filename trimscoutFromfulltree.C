@@ -21,12 +21,12 @@ double DELTAPHI( double phi1, double phi2 ){
 }
 
 
-void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilename = "./scoutData4MuonsM70.root", bool isMC=false) {
+void trimscoutFromfulltree(string treepath = "full_tem.root", const char* outfilename = "./scoutDataMVA_v2.root", bool isMC=false) {
 
    bool debug=false; 
    vector<string> filesToRun;
+//   string dirIn="/eos/cms/store/group/phys_exotica/darkPhoton/jakob/newProd/";
    string dirIn="/eos/user/w/wangz/darkphoton/";
-//   string dirIn="";
    filesToRun.push_back(dirIn.append(treepath));
    TFile* outfile = new TFile(outfilename, "RECREATE");
    TTree* outtree = new TTree("tree", "tree");
@@ -52,6 +52,9 @@ void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilen
 
     
     TH2F* BS = new TH2F("BS","BS",50,-1.,1.,50,-1.,1.);
+
+    TH1F* twomupt = new TH1F("2mupt","2mupt",50,0,50.);
+    TH1F* twomupt_w = new TH1F("2mupt_w","2mupt_w",50,0,50.);
 
     TH1F* forLimitMassZ = new TH1F("forLimitMassZ","forLimitMassZ",1200,0.2,120.);
     TH1F* forLimitMassInclZ = new TH1F("forLimitMassInclZ","forLimitMassInclZ",1200,0.2,120.);
@@ -100,22 +103,23 @@ void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilen
     TTreeReaderValue<float>                        vtxchi2  (reader, "vtxchi2.vtxchie2"    );
     TTreeReaderValue<float>                        PVd  (reader, "PVd"    );
     TTreeReaderArray<float>          mva  (reader, "mva"    );
-    TTreeReaderArray<float>          mva2  (reader, "mva2"    );
-    TTreeReaderValue<float>                        IP  (reader, "IP"    ); 
 
+    int count[4]={0};
     while(reader.Next()) {
+      count[0]++;
       if(debug) cout << "PVd=" << *PVd << endl;
-      if(*PVd>2) continue;
-      if(*IP>3.5) continue;
+      if(*PVd>0.015) continue;
       int indx1, indx2;
       float tempt=0;
       if(*nmuon<2) continue;
+      count[1]++;
       PVd_c=*PVd; 
       vtxchi2_c=*vtxchi2;
       std::vector<unsigned> goodmuons;
       for (int i = 0; i < *nmuon; i++) {
           if(mupt[i]<4 || abs(mueta[i])>1.9) continue;
-          if(mva2[i]<-0.1) continue;
+          if(mva[i]<-0.1) continue;
+//          if(muid[i]<0.5) continue;
           goodmuons.push_back(i);
       }
 
@@ -123,7 +127,7 @@ void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilen
         unsigned idx1 = goodmuons[0];
         unsigned idx2 = goodmuons[1];
         if(debug) cout << "idx1,2=" << idx1 << "," << idx2 << endl; 
-                
+        count[2]++;           
         if (mupt[idx1] < mupt[idx2]) {
             idx1 = goodmuons[1];
             idx2 = goodmuons[0];
@@ -163,7 +167,7 @@ void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilen
 	//
         mass   = mm.M();
 	//	mass4  = mmmm.M();
-        
+        double ptll=mm.Pt(); 
 	
 	float slidePt1 = mm.M()/3.;
 	if(slidePt1<4.) slidePt1 = 4.;
@@ -183,7 +187,9 @@ void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilen
 	if(m1ch*m2ch<0. &&  m1pt>slidePt1 && m2pt>slidePt2 && maxEta<1.9) forLimitMassZ->Fill(mass,weight);
 
 	if(m1ch*m2ch<0. && m1pt>slidePt1 && m2pt>slidePt2 && maxEta<1.9){ 
+        count[3]++;
 
+        if(mass<2 && mass>1){twomupt->Fill(ptll); twomupt_w->Fill(ptll,weight);}
 	massforLimitFull->Fill(mass,weight); 
 	massforLimitEta->Fill(mass,weight);
 	massforLimitOmega->Fill(mass,weight);
@@ -236,6 +242,7 @@ void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilen
 	
       goodmuons.clear();
       }
+      cout << "final showdown " << "count1=" << count[0] << " count2=" << count[1] << " count3=" << count[2] << " count4=" << count[3] << endl;
    }
    outfile->cd();
    massforLimitFull->Write();
@@ -267,7 +274,8 @@ void trimscoutFromfulltree(string treepath = "tree_3.root", const char* outfilen
    forResolutionAMassJPsi->Write();
    forResolutionBMassJPsi->Write();
    forResolutionCMassJPsi->Write();
-
+   twomupt->Write();
+   twomupt_w->Write();
     outfile->Close();
 
 }

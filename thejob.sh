@@ -15,4 +15,5 @@ out2="${in/tree_/hists_}"
 out="/eos/user/w/wangz/darkphoton/limit/"$2"/"$out2
 echo $out
 
-root -l -b -q trimscoutFromfulltree.C\(\"$2$in\"\,\"$out\"\)
+root -l -b -q trimscoutFromfulltree_bin.C\(\"$2$in\"\,\"$out\"\)
+#remember to change it back to trimscoutFromfulltree.C

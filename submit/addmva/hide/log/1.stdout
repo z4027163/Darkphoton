@@ -1,0 +1,147 @@
+
+!!! please give the directory of your TMVA installation you want to use as argument to  
+!!! source setup.sh <the TMVA installation directory>
+
+
+
+Processing add_mva.C("2017F/tree_391.root",2017)...
+/eos/user/w/wangz/darkphoton/2017F/tree_391.root
+--- Reader                   : Booking "BDT method" of type "BDT" from /eos/user/w/wangz/darkphoton/BDTweight/2017/upsilon0p03_PVd/TMVAClassification_BDT.weights.xml.
+--- MethodBase               : Reading weight file: /eos/user/w/wangz/darkphoton/BDTweight/2017/upsilon0p03_PVd/TMVAClassification_BDT.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.2.0
+--- BDT                      : MVA method was trained with ROOT Version: 5.34/18
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+--- Reader                   : Booking "BDT method" of type "BDT" from /eos/user/w/wangz/darkphoton/BDTweight/2017/jpsi0p015_sig/TMVAClassification_BDT.weights.xml.
+--- MethodBase               : Reading weight file: /eos/user/w/wangz/darkphoton/BDTweight/2017/jpsi0p015_sig/TMVAClassification_BDT.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.2.0
+--- BDT                      : MVA method was trained with ROOT Version: 5.34/18
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+total=1210154
+entry=0
+entry=10000
+entry=20000
+entry=30000
+entry=40000
+entry=50000
+entry=60000
+entry=70000
+entry=80000
+entry=90000
+entry=100000
+entry=110000
+entry=120000
+entry=130000
+entry=140000
+entry=150000
+entry=160000
+entry=170000
+entry=180000
+entry=190000
+entry=200000
+entry=210000
+entry=220000
+entry=230000
+entry=240000
+entry=250000
+entry=260000
+entry=270000
+entry=280000
+entry=290000
+entry=300000
+entry=310000
+entry=320000
+entry=330000
+entry=340000
+entry=350000
+entry=360000
+entry=370000
+entry=380000
+entry=390000
+entry=400000
+entry=410000
+entry=420000
+entry=430000
+entry=440000
+entry=450000
+entry=460000
+entry=470000
+entry=480000
+entry=490000
+entry=500000
+entry=510000
+entry=520000
+entry=530000
+entry=540000
+entry=550000
+entry=560000
+entry=570000
+entry=580000
+entry=590000
+entry=600000
+entry=610000
+entry=620000
+entry=630000
+entry=640000
+entry=650000
+entry=660000
+entry=670000
+entry=680000
+entry=690000
+entry=700000
+entry=710000
+entry=720000
+entry=730000
+entry=740000
+entry=750000
+entry=760000
+entry=770000
+entry=780000
+entry=790000
+entry=800000
+entry=810000
+entry=820000
+entry=830000
+entry=840000
+entry=850000
+entry=860000
+entry=870000
+entry=880000
+entry=890000
+entry=900000
+entry=910000
+entry=920000
+entry=930000
+entry=940000
+entry=950000
+entry=960000
+entry=970000
+entry=980000
+entry=990000
+entry=1000000
+entry=1010000
+entry=1020000
+entry=1030000
+entry=1040000
+entry=1050000
+entry=1060000
+entry=1070000
+entry=1080000
+entry=1090000
+entry=1100000
+entry=1110000
+entry=1120000
+entry=1130000
+entry=1140000
+entry=1150000
+entry=1160000
+entry=1170000
+entry=1180000
+entry=1190000
+entry=1200000
+entry=1210000

@@ -1,0 +1,22 @@
+executable = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/thejob.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ""
+transfer_output_files = ""
+queue arguments from (
+    "tree_188.root   2018A  2018"
+    "tree_257.root   2018A  2018"
+    "tree_284.root   2018A  2018"
+    "tree_306.root   2018A  2018"
+    "tree_346.root   2018A  2018"
+    "tree_416.root   2018A  2018"
+    "tree_520.root   2018A  2018"
+    "tree_155.root   2018B  2018"
+    "tree_714.root   2018D1  2018"
+    "tree_993.root   2018D1  2018"
+    "tree_1007.root   2018D2  2018"
+    "tree_1113.root   2018D2  2018"
+    "tree_1246.root   2018D2  2018"
+)
++JobFlavour = "espresso"
+

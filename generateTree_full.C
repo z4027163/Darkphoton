@@ -27,8 +27,8 @@ void generateTree_full(string treepath = "scout_2.root", const char* outfilename
    filesToRun.push_back(dirIn.append(treepath));isData.push_back(true);
    TFile* outfile = new TFile(outfilename, "RECREATE");
 
-    outfile->cd();
-    TDirectory *tof = outfile->mkdir("tpTree");
+//    outfile->cd();
+//    TDirectory *tof = outfile->mkdir("tpTree");
 
    TTree* outtree = new TTree("fitter_tree", "fitter_tree");
      
@@ -226,8 +226,9 @@ void generateTree_full(string treepath = "scout_2.root", const char* outfilename
       }
    }
    cout << "2m=" << count2 << "\n final=" << count << endl;
-   tof->cd();
+//   tof->cd();
+   outfile->cd();
    outtree->Write("fitter_tree",TObject::kOverwrite);
-   tof->Close();
+//   tof->Close();
     outfile->Close();
 }

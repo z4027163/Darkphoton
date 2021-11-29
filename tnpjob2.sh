@@ -14,4 +14,4 @@ out2="${in/scout_/tree_}"
 out="/eos/user/w/wangz/darkphoton/tnp/"$3"/"$out2
 echo $out
 
-root -l -b generateTree2.C\(\"$2$in\"\,\"$out\"\,false\)
+root -l -b generateTree2.C\(\"$2$in\"\,\"$out\"\,true\)

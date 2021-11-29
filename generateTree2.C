@@ -76,7 +76,7 @@ void generateTree2(string treepath = "scout_1.root", const char* outfilename = "
     TTreeReaderValue<double>                       rho      (reader, "rho"        );
     TTreeReaderValue<unsigned int>                 run      (reader, "run"        );
     TTreeReaderValue<unsigned int>                 lumSec   (reader, "lumSec"     );
-  
+    TTreeReaderValue<unsigned int>                 putrue   (reader, "putrue"     ); 
   //TTreeReaderValue<std::vector<int> >		   pdgid    (reader, "pdgid" );
   //TTreeReaderValue<std::vector<int> > 	   motherid (reader, "motherid");
      
@@ -118,6 +118,7 @@ void generateTree2(string treepath = "scout_1.root", const char* outfilename = "
     unsigned nvtx  = 0;
     unsigned Run   = 0;
     unsigned LumSec   = 0;
+    unsigned npu = 0;
     float Dxy=0;
     float Dz=0;
     float vchi2=0;
@@ -145,6 +146,7 @@ void generateTree2(string treepath = "scout_1.root", const char* outfilename = "
     outtree->Branch("mass"  , &mass  , "mass/F"  );
     outtree->Branch("nvtx"  , &nvtx  , "nvtx/i"  );
     outtree->Branch("Run"   , &Run   , "Run/i"  );
+    outtree->Branch("npu"   , &npu   , "npu/i"  );
     outtree->Branch("LumSec", &LumSec, "LumSec/i"  );
     outtree->Branch("dR", &dR,"dR/F");
     outtree->Branch("dxy",&Dxy,"dxy/F");
@@ -230,6 +232,7 @@ void generateTree2(string treepath = "scout_1.root", const char* outfilename = "
 	
 	Run=*run;
 	LumSec=*lumSec;
+        npu=*putrue;
 
         Dxy=(*dxy)[idx2];
         Dz=(*dz)[idx2]; 
@@ -249,8 +252,8 @@ void generateTree2(string treepath = "scout_1.root", const char* outfilename = "
 	float BSx = 0.092;
 	float BSy = -0.06;
 //	if(treepath.find("_13TeV") != string::npos){ BSx = -0.029; BSy = 0.07;}
-//        if(isMC){ BSx=-0.02446; BSy=0.06924;} //upsilon sample
-        if(isMC){ BSx=-0.02465; BSy=0.06962;}   //jpsi sample
+        if(isMC){ BSx=-0.02446; BSy=0.06924;} //upsilon sample
+//        if(isMC){ BSx=-0.02465; BSy=0.06962;}   //jpsi sample
 	float slidePt1 = mm.M()/3.;
 	if(slidePt1<4.) slidePt1 = 4.;
 	float slidePt2 = mm.M()/4.;
@@ -277,7 +280,7 @@ void generateTree2(string treepath = "scout_1.root", const char* outfilename = "
 	  if(  sqrt( ((*vtxX)[0] - BSx)*((*vtxX)[0] - BSx) + ((*vtxY)[0] - BSy)*((*vtxY)[0] - BSy) )  < 0.1 ) passPVconstraintTight = true;
 	  }
 //        if(!passPVconstraint) continue;
-//	if(!( l1Result->at(2) || l1Result->at(6) || l1Result->at(7) || l1Result->at(10) || l1Result->at(11) || l1Result->at(13))) continue;
+//        if(!( l1Result->at(2) || l1Result->at(6) || l1Result->at(7) || l1Result->at(10) || l1Result->at(11) || l1Result->at(13))) continue;
 //        if(!( l1Result->at(15))) continue;
         if(nvtx<=0) continue;
  

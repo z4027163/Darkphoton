@@ -9,7 +9,7 @@ queue 264
 #log = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).log
 #output = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).out
 #error = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).err
-+JobFlavour = "workday"
++JobFlavour = "espresso"
 #queue INPUT from data17Dlist.list
 #queue INPUT from lousyList3.list
 
