@@ -1,0 +1,1 @@
+combine -M MultiDimFit -d output_dual/skim.txt --algo none --setParameters r=0.0 --setParameterRanges r=0.1,5 --cminDefaultMinimizerStrategy 0  -n SB -m 1.508 --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace

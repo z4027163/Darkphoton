@@ -1,0 +1,11 @@
+run:
+root -l tem_1.cpp   //make 207 SR
+root -l tem_2.cpp   //make 207 high ip region
+root -l tem_3.cpp   //make 215 SR
+root -l tem_4.cpp  // make 216 CR
+
+python tem_1.py    //SR 1.58 peak, show KK
+python tem_2.py    //CR 1.58 peak, show KK
+python tem_3.py    //SR 1.73 peak
+python tem_4.py    //CR 1.73 peak
+

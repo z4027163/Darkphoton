@@ -1,0 +1,97 @@
+RooWorkspace(w) w contents
+
+variables
+---------
+(CMS_channel,MH,M_generic,alpha1,alpha2,bar1_2018,bar2_2018,bar3_2018,bar4_2018,bar5_2018,bar6_2018,bf1_2018,bf2_2018,bf3_2018,bf4_2018,bf5_2018,bfp1_2018,bhh_norm_2018,bkg_norm2_2018,bkg_norm_2018,car1_2018,car1_dual_2018,dkk_ratio,dkk_ratio_In,eff_trig_2018,eff_trig_2018_In,frac_gau,gau_reso_scale,id_eff_mva_2018,id_eff_mva_2018_In,lar1_2018,lar1_dual_2018,lar2_2018,lar2_dual_2018,lar3_2018,lar3_dual_2018,lar4_2018,lar4_dual_2018,lumi13TeV_2018,lumi13TeV_2018_In,m2mu,n1,par1_2018,par2_2018,par3_2018,par4_2018,pdf_dual_index_2018,pdf_index_2018,pf1_2018,pow_1_2018,qar1_2018,qar2_2018,qar3_2018,r,res_rel_generic,res_rel_unc,res_unc)
+
+p.d.f.s
+-------
+RooExponential::bkg_dual_model_exp4_2018[ c=car1_dual_2018 ] = 0.0944839
+RooPolynomial::bkg_dual_model_line_2018[ coefList=(lar1_dual_2018,lar2_dual_2018,lar3_dual_2018,lar4_dual_2018) ] = 1.16226
+RooProdPdf::bkg_dual_model_pol4xexp_2018[ bkg_dual_model_line_2018 * bkg_dual_model_exp4_2018 ] = 0.109815
+RooBernstein::bkg_model_bern3_2018[ coefList=(qar1_2018,qar2_2018,qar3_2018) ] = 1.98921
+RooAddPdf::bkg_model_bern3p1_2018[ pf1_2018 * plaw1_2018 + bkg_model_bern3p1_2018_recursive_fraction_bkg_model_bern3_2018 * bkg_model_bern3_2018 ] = 1.49832
+RooBernstein::bkg_model_bern4_2018[ coefList=(par1_2018,par2_2018,par3_2018,par4_2018) ] = 1.51782
+RooExponential::bkg_model_exp4_2018[ c=car1_2018 ] = 0.135668
+RooAddPdf::bkg_model_exp7_2018[ bf1_2018 * exp1_2018 + bkg_model_exp7_2018_recursive_fraction_exp2_2018 * exp2_2018 + bkg_model_exp7_2018_recursive_fraction_exp3_2018 * exp3_2018 + bkg_model_exp7_2018_recursive_fraction_exp4_2018 * exp4_2018 + bkg_model_exp7_2018_recursive_fraction_exp5_2018 * exp5_2018 + bkg_model_exp7_2018_recursive_fraction_exp6_2018 * exp6_2018 ] = 69.7395
+RooPolynomial::bkg_model_line_2018[ coefList=(lar1_2018,lar2_2018,lar3_2018,lar4_2018) ] = 24.1603
+RooProdPdf::bkg_model_pol4xexp_2018[ bkg_model_line_2018 * bkg_model_exp4_2018 ] = 3.27778
+SimpleGaussianConstraint::dkk_ratio_Pdf[ mean=dkk_ratio_In sigma=1 ] = 1
+SimpleGaussianConstraint::eff_trig_2018_Pdf[ mean=eff_trig_2018_In sigma=1 ] = 1
+RooExponential::exp1_2018[ c=bar1_2018 ] = 1.11417
+RooExponential::exp2_2018[ c=bar2_2018 ] = 11.4132
+RooExponential::exp3_2018[ c=bar3_2018 ] = 251695
+RooExponential::exp4_2018[ c=bar4_2018 ] = 2.594e-05
+RooExponential::exp5_2018[ c=bar5_2018 ] = 2.03127e+10
+RooExponential::exp6_2018[ c=bar6_2018 ] = 10.5328
+SimpleGaussianConstraint::id_eff_mva_2018_Pdf[ mean=id_eff_mva_2018_In sigma=1 ] = 1
+SimpleGaussianConstraint::lumi13TeV_2018_Pdf[ mean=lumi13TeV_2018_In sigma=1 ] = 1
+RooSimultaneousOpt::model_s[ indexCat=CMS_channel CatAB=pdf_binCatAB CR=pdf_binCR extraConstraints=() channelMasks=() ] = 0.696122
+RooProdPdf::nuisancePdf[ lumi13TeV_2018_Pdf * id_eff_mva_2018_Pdf * eff_trig_2018_Pdf * dkk_ratio_Pdf ] = 1
+RooProdPdf::pdf_binCR[ lumi13TeV_2018_Pdf * id_eff_mva_2018_Pdf * eff_trig_2018_Pdf * dkk_ratio_Pdf * pdf_binCR_nuis * pdfbins_binCR ] = 0.377432
+RooAddPdf::pdf_binCR_nuis[ n_exp_binCR_proc_bkg_mass * shapeBkg_bkg_mass_CR + n_exp_binCR_proc_bhh_mass * shapeBkg_bhh_mass_CR ] = 0.377432
+RooProdPdf::pdf_binCatAB[ lumi13TeV_2018_Pdf * id_eff_mva_2018_Pdf * eff_trig_2018_Pdf * dkk_ratio_Pdf * pdf_binCatAB_nuis * pdfbins_binCatAB ] = 1.99384
+RooAddPdf::pdf_binCatAB_nuis[ n_exp_binCatAB_proc_signalModel_generic * shapeSig_signalModel_generic_CatAB + n_exp_binCatAB_proc_bkg_mass * shapeBkg_bkg_mass_CatAB + n_exp_binCatAB_proc_bhh_mass * shapeBkg_bhh_mass_CatAB ] = 1.99384
+RooProdPdf::pdfbins_binCR[  ] = 1
+RooProdPdf::pdfbins_binCatAB[  ] = 1
+RooGenericPdf::plaw1_2018[ formula="TMath::Power(@0,@1)" ] = 0.960903
+RooHistPdf::shapeBkg_bhh_mass_CR[ ] = 183.876
+RooHistPdf::shapeBkg_bhh_mass_CatAB[ ] = 183.876
+RooMultiPdf::shapeBkg_bkg_mass_CR[ _index=pdf_dual_index_2018 ] = 0.109815
+RooMultiPdf::shapeBkg_bkg_mass_CatAB[ _index=pdf_index_2018 ] = 1.51782
+RooAddPdf::shapeSig_signalModel_generic_CatAB[ frac_gau * signalModel_CB_generic + [%] * signalModel_gau_generic ] = 0.000120174
+RooDoubleCB::signalModel_CB_generic[ x=m2mu xp=NULL mean=M_generic width=res_CB_generic alpha1=alpha1 n1=n1 alpha2=alpha2 n2=n1 xp=NULL mean=M_generic width=res_CB_generic alpha1=alpha1 n1=n1 alpha2=alpha2 n2=n1 x=m2mu xp=NULL mean=M_generic width=res_CB_generic alpha1=alpha1 n1=n1 alpha2=alpha2 n2=n1 ] = 0.000256674
+RooGaussian::signalModel_gau_generic[ mean=M_generic sigma=res_gau_generic ] = 2.38917e-16
+
+functions
+--------
+RooRecursiveFraction::bkg_model_bern3p1_2018_recursive_fraction_bkg_model_bern3_2018[ ] = 0.424332
+RooRecursiveFraction::bkg_model_exp7_2018_recursive_fraction_exp2_2018[ ] = 9.56092e-08
+RooRecursiveFraction::bkg_model_exp7_2018_recursive_fraction_exp3_2018[ ] = 1.9396e-11
+RooRecursiveFraction::bkg_model_exp7_2018_recursive_fraction_exp4_2018[ ] = 1.1732e-13
+RooRecursiveFraction::bkg_model_exp7_2018_recursive_fraction_exp5_2018[ ] = 3.37845e-09
+RooRecursiveFraction::bkg_model_exp7_2018_recursive_fraction_exp6_2018[ ] = 1.27935e-09
+ProcessNormalization::n_exp_binCR_proc_bhh_mass[ asymmThetaList=() otherFactorList=(bhh_norm_2018) ] = 10400
+ProcessNormalization::n_exp_binCR_proc_bkg_mass[ asymmThetaList=() otherFactorList=(bkg_norm2_2018) ] = 7.13106e+06
+ProcessNormalization::n_exp_binCatAB_proc_bhh_mass[ asymmThetaList=() otherFactorList=(bhh_norm_2018) ] = 10000
+ProcessNormalization::n_exp_binCatAB_proc_bkg_mass[ asymmThetaList=() otherFactorList=(bkg_norm_2018) ] = 3.82079e+06
+ProcessNormalization::n_exp_binCatAB_proc_signalModel_generic[ asymmThetaList=() otherFactorList=(r) ] = 24.2031
+RooFormulaVar::res_CB_generic[ formula="M_generic*res_rel_generic*(1+res_rel_unc*res_unc)" ] = 0.0679805
+RooFormulaVar::res_gau_generic[ formula="gau_reso_scale*M_generic*res_rel_generic*(1+res_rel_unc*res_unc)" ] = 0.0396736
+
+datasets
+--------
+RooDataSet::data_obs(m2mu,CMS_channel)
+
+embedded datasets (in pdfs and functions)
+-----------------------------------------
+RooDataHist::dh(m2mu)
+
+parameter snapshots
+-------------------
+clean = (m2mu=5.56577,CMS_channel=CatAB(idx = 0)
+,r=0.001,MH=5.229[C],lumi13TeV_2018=0 +/- 1,lumi13TeV_2018_In=0[C],id_eff_mva_2018=0 +/- 1,id_eff_mva_2018_In=0[C],eff_trig_2018=0 +/- 1,eff_trig_2018_In=0[C],dkk_ratio=0 +/- 1,dkk_ratio_In=0[C],bkg_norm_2018=1,bkg_norm2_2018=1,bhh_norm_2018=1,M_generic=5.22927[C],res_rel_generic=0.013[C],res_rel_unc=0.2[C],res_unc=0[C],alpha1=1.5676 +/- 0.000973589[C],n1=2.42971 +/- 0.00240036[C],alpha2=3.28768 +/- 0.00311965[C],gau_reso_scale=0.583603 +/- 0.000156681[C],frac_gau=0.468198 +/- 0.000255903[C],pdf_index_2018=_pdf0(idx = 0)
+,par1_2018=1.50033 +/- 0.0347507,par2_2018=1.5058 +/- 0.0354254,par3_2018=1.51992 +/- 0.0357397,par4_2018=1.51779 +/- 0.0351563,lar1_2018=1.45596 +/- 0.719857,lar2_2018=0.248182 +/- 0.508172,lar3_2018=0.0186031 +/- 0.0249338,lar4_2018=0.0043363 +/- 0.00238263,car1_2018=-0.358898 +/- 0.0328206,bar1_2018=0.0194246 +/- 0.00260694,bf1_2018=1 +/- 0.00511471,bar2_2018=0.437454 +/- 13.8619,bf2_2018=0.953361 +/- 0.660181,bar3_2018=2.23437 +/- 11.6486,bf3_2018=0.00414682 +/- 0.227943,bar4_2018=-1.89726 +/- 4.80632,bf4_2018=2.51873e-05 +/- 0.229837,bar5_2018=4.26437 +/- 16.6807,bf5_2018=0.725332 +/- 0.375588,bar6_2018=0.423031 +/- 15.191,pow_1_2018=-0.0232325 +/- 0.289158,pf1_2018=0.387604 +/- 0.688027,qar1_2018=1.93425 +/- 0.0683831,qar2_2018=1.97614 +/- 0.0609528,qar3_2018=1.98935 +/- 0.0773701,bfp1_2018=0.692904 +/- 0.625179,pdf_dual_index_2018=_pdf0(idx = 0)
+,lar1_dual_2018=-0.0626444 +/- 0.0366702,lar2_dual_2018=-0.00437692 +/- 0.00589742,lar3_dual_2018=0.000503627 +/- 0.000547078,lar4_dual_2018=0.000583231 +/- 6.67973e-05,car1_dual_2018=-0.423899 +/- 0.0241728)
+MultiDimFit = (m2mu=5.56577,CMS_channel=CatAB(idx = 0)
+,r=0.00100037 +/- 0.000944015,MH=5.229[C],lumi13TeV_2018=-0.00041809 +/- 1.00176,lumi13TeV_2018_In=0[C],id_eff_mva_2018=-0.00182181 +/- 0.999511,id_eff_mva_2018_In=0[C],eff_trig_2018=-0.000399245 +/- 1.00035,eff_trig_2018_In=0[C],dkk_ratio=-0.0663941 +/- 0.994624,dkk_ratio_In=0[C],bkg_norm_2018=0.999478 +/- 0.000529812,bkg_norm2_2018=0.999708 +/- 0.000374812,bhh_norm_2018=0.200017 +/- 0.869126,M_generic=5.22927[C],res_rel_generic=0.013[C],res_rel_unc=0.2[C],res_unc=0[C],alpha1=1.5676 +/- 0.000973589[C],n1=2.42971 +/- 0.00240036[C],alpha2=3.28768 +/- 0.00311965[C],gau_reso_scale=0.583603 +/- 0.000156681[C],frac_gau=0.468198 +/- 0.000255903[C],pdf_index_2018=_pdf0(idx = 0)
+,par1_2018=1.5008 +/- 0.00258958,par2_2018=1.50379 +/- 0.0045051,par3_2018=1.51807 +/- 0.00483659,par4_2018=1.51846 +/- 0.00254534,lar1_2018=1.45596 +/- 0.44534,lar2_2018=0.248182 +/- 0.209108,lar3_2018=0.0186031 +/- 0.0124707,lar4_2018=0.0043363 +/- 0.00140406,car1_2018=-0.358898 +/- 0.0970316,bar1_2018=0.0194246 +/- 0.00263944,bf1_2018=1 +/- 0.00280036,bar2_2018=0.437454 +/- 12.7715,bf2_2018=0.953361 +/- 0.781172,bar3_2018=2.23437 +/- 11.3081,bf3_2018=0.00414682 +/- 0.590496,bar4_2018=-1.89726 +/- 17.773,bf4_2018=2.51873e-05 +/- 0.971244,bar5_2018=4.26437 +/- 10.7328,bf5_2018=0.725332 +/- 0.583618,bar6_2018=0.423031 +/- 10.6671,pow_1_2018=-0.0232325 +/- 0.0264134,pf1_2018=0.387604 +/- 0.0508203,qar1_2018=1.93425 +/- 0.005929,qar2_2018=1.97614 +/- 0.0131186,qar3_2018=1.98935 +/- 0.00607304,bfp1_2018=0.692904 +/- 0.145674,pdf_dual_index_2018=_pdf0(idx = 0)
+,lar1_dual_2018=-0.0672032 +/- 0.0217468,lar2_dual_2018=-0.00470226 +/- 0.00334855,lar3_dual_2018=0.000493569 +/- 0.000187657,lar4_dual_2018=0.000583202 +/- 4.699e-06,car1_dual_2018=-0.423564 +/- 0.0262638)
+
+named sets
+----------
+ModelConfig_GlobalObservables:(lumi13TeV_2018_In,id_eff_mva_2018_In,eff_trig_2018_In,dkk_ratio_In)
+ModelConfig_NuisParams:(lumi13TeV_2018,id_eff_mva_2018,eff_trig_2018,dkk_ratio)
+ModelConfig_Observables:(m2mu,CMS_channel)
+ModelConfig_POI:(r)
+POI:(r)
+globalObservables:(lumi13TeV_2018_In,id_eff_mva_2018_In,eff_trig_2018_In,dkk_ratio_In)
+nuisances:(lumi13TeV_2018,id_eff_mva_2018,eff_trig_2018,dkk_ratio)
+observables:(m2mu,CMS_channel)
+
+generic objects
+---------------
+RooStats::ModelConfig::ModelConfig
+RooArgSet::discreteParams
+
+

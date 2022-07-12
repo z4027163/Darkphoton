@@ -1,0 +1,46 @@
+makeDuel_1.cpp  make 207 peak
+makeDuel_2.cpp  make high ip for 207          
+makeDuel_other.cpp make near points (202-214)
+makeDuel2_other.cpp make high ip for near points 
+PlotDual.py  make fit, make 207 signal region plot
+pyth
+
+
+run:
+root -l makeDual_1.cpp   //make 207 SR
+root -l makeDual_2.cpp   //make 207 high ip region
+root -l makeDual_3.cpp   //make 215,216 SR
+root -l makeDual_kk.cpp  // make 202-206 SR
+root -l makeDual_bothD.cpp //make 208-214 SR
+root -l makeDual_kpi.cpp   //make 217-222 SR
+root -l makeDual2_bothD.cpp  //make 202-222 CR
+
+run 207,216 to get the norm of the D->KK/Kpi, 
+then replace in makeDual_kk.cpp makeDual_bothD.cpp makeDual_kpi.cpp
+
+replace card 207,215,216 the CR bkg_mass norm
+
+python PlotDual.py     //SR 1.58 peak
+python PlotDual2.py    //CR 1.58 peak
+python PlotDual3.py    //SR 1.58 peak, show KK
+python PlotDual4.py    //CR 1.58 peak, show KK
+python PlotDual5.py    //SR 1.73 peak
+python PlotDual6.py    //CR 1.73 peak
+#python PlotDual7.py    //SR 1.86 peak
+#python PlotDual8.py    //CR 1.86 peak
+python PlotDual_kk.py   //SR bellow 1.58
+python PlotDual_kpi.py  //SR above 1.733
+python PlotDual_both.py  //SR 
+
+python pyDPLimitsProcessing_dual_other.py year
+mv higgs* file to combine_output
+python bothYearsLimitProcessing_dual_other.py
+mv combine file to combine_output
+
+python check_pvalue.py
+python check_pvalue_dual.py
+mv higgs*Sig* files to correcponding combine_output folder
+
+python signifiance_check.py  (check p-value of single point)
+
+python LIMITPVALUE.py year  (get pvalue plot)
