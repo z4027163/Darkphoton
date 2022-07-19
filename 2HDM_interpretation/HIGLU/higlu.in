@@ -1,0 +1,166 @@
+PROCESS:  0 = GG --> H         1 = H --> GG
+=======   ELW = 1: INCLUDE SM NLO ELW. CORRECTIONS (FACTORIZED FORM)
+          ELW = 2: INCLUDE SM NLO ELW. + NNLO ELW./QCD CORRECTIONS
+                   (FACTORIZED FORM)
+ 
+PROCESS  = 0
+ELW      = 0
+------------------------------------------------------------------
+DISTRIBUTIONS: 0 = TOT CXN   1 = D2SIGMA/DP_T/DY   2 = DSIGMA/DP_T
+=============  3 = CXN(PTMAX > PT > PTMIN)
+               (ONLY FOR GG --> H)
+
+DISTRIB  = 0
+P_T      = 100.D0
+Y        = 0.D0
+PTMIN    = 100.D0
+PTMAX    = 6500.D0
+---------------------------------------------------------------
+COLLIDER:   0 = P P              1 = P PBAR
+========
+ 
+COLLIDER = 0
+---------------------------------------------------------------
+TOTAL ENERGY: [TEV]
+=============
+ 
+ENERGY   = 13.D0
+---------------------------------------------------------------
+COUPLINGS:  G_B=BOTTOM  G_T=TOP  G_C=CHARM  G_SB1/2=SBOTTOM  G_ST1/2=STOP
+==========  (MODEL = 0) C_G=DIM5 HGG COUPLING AT SCALE CG_SCALE
+                        SILH=1: SILH, SILH=0: NON LIN
+ 
+G_T      = 2.D0
+G_B      = 0.5D0
+G_C      = 2.D0
+G_SB1   =  0.D0
+G_SB2   =  0.D0
+G_ST1   =  0.D0
+G_ST2   =  0.D0
+C_G     =  0.0D0
+CG-SCALE=  125.D0
+SILH    =  0
+---------------------------------------------------------------
+SM4: COUPLINGS: G_BP=BOTTOM^P  G_TP=TOP^P
+====
+
+G_BP    =  0.D0
+G_TP    =  0.D0
+--------------------------------------------------
+TOP MASS:  0 = POLE MASS   1 = MSBAR MASS
+=========  SCALE = MU_1*M_HIGGS + MU_2 (FOR MSBAR MASS)
+ 
+TOPMASS  = 0
+MU_1     = 0.5D0 
+MU_2     = 0.D0 
+---------------------------------------------------------------
+BOTTOM MASS:  0 = POLE MASS   1 = MSBAR MASS
+============  SCALE = MU_1*M_HIGGS + MU_2 (FOR MSBAR MASS)
+ 
+BOTMASS  = 0
+MU_1     = 0.5D0 
+MU_2     = 0.D0 
+---------------------------------------------------------------
+CHARM MASS:  0 = POLE MASS   1 = MSBAR MASS
+===========  SCALE = MU_1*M_HIGGS + MU_2 (FOR MSBAR MASS)
+ 
+CHMMASS  = 0
+MU_1     = 0.5D0 
+MU_2     = 0.D0 
+---------------------------------------------------------------
+HIGGS TYPE AND MASS [GEV]: 1 = HEAVY SCALAR 2 = PSEUDOSCALAR 3 = LIGHT SCALAR
+==========================  INDIVIDU = 0: M_HIGGS = M_A
+
+TYPE     = 1
+INDIVIDU = 0
+M_HIGGS  = 4.2D0
+--------------------------------------------------------------- 
+SCALES: [GEV] MU = MU_1*M_HIGGS + MU_2:   RENORMALIZATION SCALE
+=======        Q =  Q_1*M_HIGGS +  Q_2:     FACTORIZATION SCALE
+ 
+MU_1     = 0.5D0
+MU_2     = 0.0D0
+Q_1      = 0.5D0
+Q_2      = 0.0D0
+---------------------------------------------------------------
+ORDER OF CROSS SECTION:  1 = LO     2 = NLO     3 = NNLO
+=======================
+ 
+LOOP     = 3
+---------------------------------------------------------------
+DEFINITION OF ALPHA_S:  1 = ALPHA_S (M_Z)   2 = BY LAMBDA (N_F)
+====================== 
+ 
+CHOICE   = 1
+---------------------------------------------------------------
+NUMBER OF EXTERNAL LIGHT FLAVORS: (FOR H --> GG) 
+=================================
+ 
+N_EXT    = 5
+---------------------------------------------------------------
+VEGAS:       ABSERR = ABSOLUTE ERROR
+======       POINTS = NUMBER OF CALLS
+             ITMAX  = NUMBER OF ITERATIONS
+             PRINT  = PRINT OPTION FOR INTERMEDIATE VEGAS-OUTPUT
+                      0            1             10
+                      NO OUPUT     PRETTYPRINT   TABLE
+ 
+ABSERR   = 0.D0
+POINTS   = 10000
+ITMAX    = 5
+PRINT    = 10 
+--------------------------------------------------
+STRUCTURE FUNCTIONS: STFUN: 0 = LHAPDF  1 = GRV   2 = CTEQ6
+==================== SCHEME = FACTORIZATION SCHEME: 0 = MSBAR   1 = DIS
+                     ISETERR:  >0: 90% CL   <0: 68% CL
+SCHEME  =  0
+STFUN   =  0
+PDFPATH =  Grids
+
+LO
+--
+PDFNAME =  PDF4LHC15_nlo_100
+NSET    =  0
+
+NLO
+---
+PDFNAME =  PDF4LHC15_nlo_100
+NSET    =  0
+
+NNLO
+----
+PDFNAME =  PDF4LHC15_nnlo_30
+NSET    =  0
+-------------------------------------------------- 
+ALPHA_S (M_Z):
+==============
+
+LO
+--
+ALPHA_S  = 0.118D0
+
+NLO
+---
+ALPHA_S  = 0.118D0
+
+NNLO
+----
+ALPHA_S  = 0.118D0
+---------------------------------------------------------------
+LAMBDA_NF: [GEV] (QCD SCALE)
+==========
+
+NF      =  5
+
+LO
+--
+LAMBDA  =  0.254973D0
+
+NLO
+---
+LAMBDA  =  0.255099D0
+
+NNLO
+----
+LAMBDA  =  0.197689D0
+---------------------------------------------------------------
