@@ -1,3 +1,11 @@
+Script
+senThetaLimits_2HDM_IV_fullMassRange_newAcceptances_ptmumu_allLimits.ipynb
+
+jupyter notebook senThetaLimits_2HDM_IV_fullMassRange_newAcceptances_ptmumu_allLimits.ipynb &
+
+Kernel->Run
+
+
 # Low-mass dark photon scouting search
 ## 2HDM Scalar model interpretation 
 
