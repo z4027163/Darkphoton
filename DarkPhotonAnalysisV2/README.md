@@ -27,3 +27,9 @@ scram b -j 8
 cd test
 cmsRun scout2018_cfg.py
 ```
+
+new files saving the gen-level info: 
+plugin/GenTreeMaker.cc
+test/gentree_cfg.py (cmsRun gentree_cfg.py)
+input: AOD MC
+output: tree including gen-muon only
