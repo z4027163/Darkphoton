@@ -1,11 +1,3 @@
-Script
-senThetaLimits_2HDM_IV_fullMassRange_newAcceptances_ptmumu_allLimits.ipynb
-
-jupyter notebook senThetaLimits_2HDM_IV_fullMassRange_newAcceptances_ptmumu_allLimits.ipynb &
-
-Kernel->Run
-
-
 # Low-mass dark photon scouting search
 ## 2HDM Scalar model interpretation 
 
@@ -34,7 +26,7 @@ The list of branching ratios for each mass point under consideration is taken fr
 - Cross section:
 The list of cross sections for each mass point under is obtained by using a TGraph fit (see `allMassPoints_fit.C`) and is available in `xsec_muR05_muF05_allLimits.txt`.
 
-- Obs limit
+- Obs limit:
 The list of observed limits for each mass point is contained in `CMS_modelIndependentLimits_red_bothYears_twoIDs_90CL_allLimits_20220401.txt`.
 (The previous set of limits is also provided for easy comparison and as a sanity check of the updates of the notebook: `CMS_modelIndependentLimits_red_bothYears_twoIDs_90CL_20210723_doubleCheck.txt`)
 
