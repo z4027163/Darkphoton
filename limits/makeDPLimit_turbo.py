@@ -17,8 +17,7 @@ from math import sqrt
 year = sys.argv[1]
 
 fff = open("eps2.txt", "w")
-
-fff.write("mass  -2              -1              0              +1              +2              Obs\n")
+#fff2 = open("eps2_obs.txt", "w")
 
 
 limit1=array('d')
@@ -44,15 +43,6 @@ mass2=array('d')
 masserr1=array('d')
 masserr2=array('d')
 
-#xsec=1.#pb
-
-
-#some counters
-#m=0.2
-#t=0
-#make the loop
-
-#a=10#1./0.1143
 if year == "2018":
         lumi = 61.3
  #       lumi = 6.6
@@ -71,22 +61,27 @@ if year == "CL90":
 #lumi_project = 96.6
 lumi_project = lumi
 
-print(lumi)
 #ACCEPTANCE
-acc_file = TFile.Open("acceptances_dy.root")
-acc_teff = acc_file.Get("cmsacc")
-nbins_acc = acc_teff.GetPassedHistogram().GetNbinsX()
-acceptances = array('d')
-m_acceptances = array('d')
-for j in range(nbins_acc):
-	acceptances.append(acc_teff.GetEfficiency(j+1))
-	m_acceptances.append(acc_teff.GetPassedHistogram().GetBinCenter(j+1))
-accgraph = TGraph(nbins_acc,m_acceptances,acceptances);
+m_acc = array('d',[1.1, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5,8.5,9.5,15])
+#NNLO
+a_acc = array('d',[0.000457,0.001013,0.003603,0.01086,0.01441,0.01903,0.026,0.0369,0.07352,0.06841,0.1424])
+#NLO
+#a_acc = array('d',[0.000138,0.0002246,0.0005281,0.001168,0.002222,0.003816,0.006513,0.01196,0.03348,0.07715,0.1781])
+#pythia
+#a_acc = array('d',[0.00013,0.000205,0.0004193,0.001192,0.0028,0.005065,0.00891,0.01516,0.03266,0.0629,0.188])
+accgraph = TGraph(len(m_acc),m_acc,a_acc);
 
 #THEO CROSS SECTION FOR EPS=0.02
-eps2scale = 1.
+m= array('d',[1.1,2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,   9.0,   10.0,  12.5,  20.0])
+#xSec= array('d',[8541, 7514, 3323, 2055, 1422, 1043, 793.6, 621.1, 484.3, 292.8, 98.95])#[pb], model-dependent
+#xSec= array('d',[26900,21800, 10990, 3894, 2166, 1421, 1013, 760.5, 589.6, 457.4, 275.1, 92.97])
+xSec= array('d',[33500,27400,13100,5181,3126,1960,1346,975,738,559,327,112])
 
-a = eps2scale/sqrt(lumi_project/lumi) # for lumi projection (6.6->100)
+xsecgraph = TGraph(len(m),m,xSec);
+eps2scale = 1.
+base_eps = 0.02 #epsilon for which the cross sections are computed
+
+a = (base_eps**2)*eps2scale/sqrt(lumi_project/lumi) # for lumi projection (6.6->100)
 
 files = glob("combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
 
@@ -94,101 +89,88 @@ d_m = {}
 for fname in files:
         m = float(re.search(r"mH(\d+\.?\d+).root", fname).group(1))
         d = int(re.search(r"Index_(\d+).Asymptotic", fname).group(1))
-	d_m[d] = [m, fname]
+        d_m[d] = [m, fname]
 
 
 d_m = sorted(d_m.items())
 print d_m
 
 for d,m_fname in d_m:
-	m, fname = m_fname
-        ##if (m == 1.716 or m ==7.632):
-        ##        continue
-	#file90=glob.glob("higgsCombineIterV9_CL90_ForPress_2018_"+str(d)+".AsymptoticLimits.mH*.root")
+    m, fname = m_fname
+    #if (m == 1.716 or m ==7.632):
+    #        continue
+    #file90=glob.glob("higgsCombineIterV9_CL90_ForPress_2018_"+str(d)+".AsymptoticLimits.mH*.root")
 
-	acc = accgraph.Eval(m)
-        if (m < 3):
-                f=ROOT.TFile.Open(fname)
-                tree=f.Get("limit")
-                tree.GetEntry(2)
-                limit1.append(tree.limit*a)
+    acc = accgraph.Eval(m,0,"S")
+    xsec = xsecgraph.Eval(m,0,"S")
+
+
+    if (m < 3):
+            f=ROOT.TFile.Open(fname)
+            tree=f.Get("limit")
+            tree.GetEntry(2)
+            limit1.append(tree.limit*a/(acc*xsec))
+            a_exp=tree.limit*a/(acc*xsec)
+             
+            tree.GetEntry(0)
+            limit195up.append(abs(tree.limit*a/(acc*xsec)-limit1[-1]))
+            tree=f.Get("limit")
+            tree.GetEntry(4)
+            limit195down.append(abs(tree.limit*a/(acc*xsec)-limit1[-1]))
+            
+            
+            tree.GetEntry(1)
+            limit168up.append(abs(tree.limit*a/(acc*xsec)-limit1[-1]))
+            tree=f.Get("limit")
+            tree.GetEntry(3)
+            limit168down.append(abs(tree.limit*a/(acc*xsec)-limit1[-1]))
+
+            tree.GetEntry(5)
+            limit1Observed.append(abs(tree.limit*a/(acc*xsec)))
+            a_obs=tree.limit*a/(acc*xsec)            
+
+            tree=f.Get("limit")
+            mass1.append(m)
+            masserr1.append(0.)
+#            fff.write("{0} {1}\n".format(m, math.sqrt(tree.limit*a)))
+            fff.write("{0} {1}\n".format(m, a_exp))
+#            fff.write("{0} {1}\n".format(m, a_obs))
+            
+    if (m > 3):
+            f=ROOT.TFile.Open(fname)
+            tree=f.Get("limit")
+            tree.GetEntry(2)
+            limit2.append(tree.limit*a/(acc*xsec))
+            a_exp=tree.limit*a/(acc*xsec)
+
+            tree.GetEntry(0)
+            limit295up.append(abs(tree.limit*a/(acc*xsec)-limit2[-1]))
+            tree=f.Get("limit")
+            tree.GetEntry(4)
+            limit295down.append(abs(tree.limit*a/(acc*xsec)-limit2[-1]))
+            
+            
+            tree.GetEntry(1)
+            limit268up.append(abs(tree.limit*a/(acc*xsec)-limit2[-1]))
+            tree=f.Get("limit")
+            tree.GetEntry(3)
+            limit268down.append(abs(tree.limit*a/(acc*xsec)-limit2[-1]))
+            
+            tree.GetEntry(5)
+            limit2Observed.append(abs(tree.limit*a/(acc*xsec)))
+            a_obs=tree.limit*a/(acc*xsec)           
  
-                a2=tree.limit*a  
-               
-                tree.GetEntry(0)
-                limit195up.append(abs(tree.limit*a-limit1[-1]))
-                a0=tree.limit*a
-
-                tree=f.Get("limit")
-                tree.GetEntry(4)
-                limit195down.append(abs(tree.limit*a-limit1[-1]))
-                a4=tree.limit*a
-
-                
-                tree.GetEntry(1)
-                limit168up.append(abs(tree.limit*a-limit1[-1]))
-                a1=tree.limit*a
- 
-                tree=f.Get("limit")
-                tree.GetEntry(3)
-                limit168down.append(abs(tree.limit*a-limit1[-1]))
-                a3=tree.limit*a
-
-                tree.GetEntry(5)
-		limit1Observed.append(abs(tree.limit*a))
-                tree=f.Get("limit")
-                print("Mass: " + str(m) + "         xSec "+ str(tree.limit*a))
-
-
-
-                mass1.append(m)
-                masserr1.append(0.)
-                #fff.write("{0} {1} {2}\n".format(m, tree.limit*a, math.sqrt(tree.limit*a)))
-                fff.write("{0} {1} {2} {3} {4} {5} {6}\n".format(m, a0,a1,a2,a3,a4,tree.limit*a))
-
-
-        if (m > 3):
-                f=ROOT.TFile.Open(fname)
-                tree=f.Get("limit")
-                tree.GetEntry(2)
-                limit2.append(tree.limit*a)
-                a2=tree.limit*a 
-                print("Mass: " + str(m) + "         xSec "+ str(tree.limit*a))
-               
-                tree.GetEntry(0)
-                limit295up.append(abs(tree.limit*a-limit2[-1]))
-                a0=tree.limit*a
-
-                tree=f.Get("limit")
-                tree.GetEntry(4)
-                limit295down.append(abs(tree.limit*a-limit2[-1]))
-                a4=tree.limit*a                
-                
-                tree.GetEntry(1)
-                limit268up.append(abs(tree.limit*a-limit2[-1]))
-                a1=tree.limit*a
-
-                tree=f.Get("limit")
-                tree.GetEntry(3)
-                limit268down.append(abs(tree.limit*a-limit2[-1]))
-                a3=tree.limit*a                
-
-                tree.GetEntry(5)
-                limit2Observed.append(abs(tree.limit*a))
-                #limit2Observed.append(abs(tree.limit*a-limit2[-1]))
-                tree=f.Get("limit")
-		
-                mass2.append(m)
-                masserr2.append(0.)
-                #fff.write("{0} {1} {2}\n".format(m, tree.limit*a, math.sqrt(tree.limit*a)))
-                fff.write("{0} {1} {2} {3} {4} {5} {6}\n".format(m, a0,a1,a2,a3,a4,tree.limit*a)) 
-print limit1
+            tree=f.Get("limit")
+            mass2.append(m)
+            masserr2.append(0.)
+#            fff.write("{0} {1}\n".format(m, math.sqrt(tree.limit*a)))
+            fff.write("{0} {1}\n".format(m, a_exp))
+#            fff.write("{0} {1}\n".format(m, a_obs))   
 
 c1=ROOT.TCanvas("c1","c1",700,500)
 #c1.SetGrid()
 c1.SetLogy()
 c1.SetLogx()
-
 
 mg=ROOT.TMultiGraph()
 mgeps=ROOT.TMultiGraph()
@@ -197,6 +179,8 @@ graph_limit1.SetTitle("graph_limit1")
 #graph_limit1.SetMarkerSize(1)
 #graph_limit1.SetMarkerStyle(20)
 #graph_limit1.SetMarkerColor(kBlack)
+#graph_limit1.SetLineWidth(2)
+#graph_limit1.SetLineStyle(7)
 graph_limit1.SetLineColor(kRed+3)
 graph_limit1.SetLineWidth(2)
 graph_limit1.SetLineStyle(2)
@@ -212,9 +196,11 @@ graph_limit2.SetTitle("graph_limit2")
 #graph_limit2.SetMarkerSize(1)
 #graph_limit2.SetMarkerStyle(20)
 #graph_limit2.SetMarkerColor(kBlack)
+#graph_limit2.SetLineWidth(2)
+#graph_limit2.SetLineStyle(7)
+graph_limit2.SetLineColor(kRed+3)
 graph_limit2.SetLineWidth(2)
 graph_limit2.SetLineStyle(2)
-graph_limit2.SetLineColor(kRed+3)
 
 #graph_limit=ROOT.TGraph(len(mass),mass,limitObserved)
 #graph_limit.Draw("same")
@@ -226,15 +212,11 @@ graph_limit295up=ROOT.TGraphAsymmErrors(len(mass2),mass2,limit2,masserr2,masserr
 graph_limit295up.SetTitle("graph_limit295up")
 graph_limit295up.SetFillColor(ROOT.TColor.GetColor(252,241,15))
 
-graph_limit168up=ROOT.TGraphAsymmErrors(len(mass1),mass1,limit1,masserr1,masserr1,limit168up,limit168down)
-graph_limit168up.SetTitle("graph_limit68up")
-graph_limit168up.SetFillColor(kGreen);
-graph_limit168up.SetMarkerColor(kGreen)
 
-graph_limit268up=ROOT.TGraphAsymmErrors(len(mass2),mass2,limit2,masserr2,masserr2,limit268up,limit268down)
-graph_limit268up.SetTitle("graph_limit68up")
-graph_limit268up.SetFillColor(kGreen);
-graph_limit268up.SetMarkerColor(kGreen)
+graph_limit168up=ROOT.TGraphAsymmErrors(len(mass1),mass1,limit1,masserr1,masserr1,limit168up,limit168down)
+graph_limit168up.SetTitle("graph_limit168up")
+graph_limit168up.SetMarkerColor(kGreen)
+graph_limit168up.SetFillColor(kGreen);
 
 graph_limitObs1=ROOT.TGraph(len(mass1),mass1,limit1Observed)
 graph_limitObs1.SetTitle("graph_limitObs1")
@@ -252,28 +234,32 @@ graph_limitObs2.SetMarkerColor(kBlack)
 graph_limitObs2.SetLineWidth(2)
 graph_limitObs2.SetLineStyle(1)
 
+graph_limit268up=ROOT.TGraphAsymmErrors(len(mass2),mass2,limit2,masserr2,masserr2,limit268up,limit268down)
+
+graph_limit268up.SetTitle("graph_limit268up")
+graph_limit268up.SetFillColor(kGreen);
+graph_limit268up.SetMarkerColor(kGreen)
+
 mg.Add(graph_limit195up,"3")
 mg.Add(graph_limit168up,"3")
-mg.Add(graph_limit1,"l")
+mg.Add(graph_limit1,"pl")
 mg.Add(graph_limitObs1,"l")
 mg.Add(graph_limit295up,"3")
 mg.Add(graph_limit268up,"3")
-mg.Add(graph_limit2,"l")
+mg.Add(graph_limit2,"pl")
 mg.Add(graph_limitObs2,"l")
-#mg.Add(graph_limit,"pl")
 
-mg.Draw("APCE5")
+mg.Draw("APC")
 mg.GetXaxis().SetRangeUser(1.2,9.)
-mg.GetYaxis().SetRangeUser(0.01,5)
-#mg.GetYaxis().SetRangeUser(0.001,4)
+mg.GetYaxis().SetRangeUser(1e-7,1e-2)
 #mg.GetYaxis().SetTitle("xSec*BR [pb]")
 #mg.GetXaxis().SetTitle("Dark Photon Mass [GeV]")
-mg.GetYaxis().SetTitle("#sigma(pp#rightarrow X)#times BR(X#rightarrow #mu#mu) #times Acc.[pb]")
+mg.GetYaxis().SetTitle("#epsilon^{2}")
 mg.GetYaxis().SetTitleOffset(0.9)
 mg.GetYaxis().SetTitleSize(0.05)
-mg.GetXaxis().SetTitle("Dimuon Mass [GeV]")
-mg.GetXaxis().SetMoreLogLabels()
+mg.GetXaxis().SetTitle("Dark Photon Mass [GeV]")
 mg.GetXaxis().SetTitleSize(0.05)
+mg.GetXaxis().SetMoreLogLabels()
 c1.Update()
 legend=ROOT.TLegend(0.5,0.6,0.8,0.9)
 cmsTag=ROOT.TLatex(0.13,0.917,"#scale[1.1]{CMS}")
@@ -290,36 +276,29 @@ cmsTag3.SetNDC()
 cmsTag3.SetTextAlign(31)
 #cmsTag.SetTextFont(61)
 cmsTag3.Draw()
-leg=ROOT.TLegend(0.6, 0.65,0.8, 0.85)  
+leg=ROOT.TLegend(0.65, 0.65,0.85, 0.85)  
 leg.SetBorderSize( 0 )
 leg.SetFillStyle( 1001 )
 leg.SetFillColor(kWhite) 
-leg.AddEntry( graph_limitObs1, "Observed",  "L" )
-leg.AddEntry( graph_limit1 , "Expected",  "L" )
+leg.AddEntry( graph_limitObs1 , "Observed",  "LP" )
+leg.AddEntry( graph_limit1 , "Expected",  "LP" )
 leg.AddEntry( graph_limit168up, "#pm 1#sigma",  "F" ) 
-leg.AddEntry( graph_limit195up, "#pm 2#sigma",  "F" )
-#leg.AddEntry( graph_limitObs1, "Observed",  "L" ) 
+leg.AddEntry( graph_limit195up, "#pm 2#sigma",  "F" ) 
 leg.Draw("same")
-c1.SaveAs("limit"+year+"DarkPhoton.root")
-c1.SaveAs("limit"+year+"DarkPhoton.pdf")
-c1.SaveAs("limit"+year+"DarkPhoton.png")
+c1.SaveAs("limit"+year+"DarkPhoton_eps2_turbo.root")
+c1.SaveAs("limit"+year+"DarkPhoton_eps2_turbo.pdf")
+c1.SaveAs("limit"+year+"DarkPhoton_eps2_turbo.png")
 c2=ROOT.TCanvas("c2","c2",700,500)
 c2.SetLogy()
-
-
-
-
 cmsTag.Draw()
 cmsTag2.Draw()
 cmsTag3.Draw()
 mgeps.Draw("APC")
-leg2=ROOT.TLegend(0.65, 0.65,0.87, 0.85)  
+leg2=ROOT.TLegend(0.65, 0.65,0.8, 0.85)  
 leg2.SetBorderSize( 0 )
 leg2.SetFillStyle( 1001 )
 leg2.SetFillColor(kWhite) 
+
 leg2.Draw("same")
 c2.SaveAs("thep.root")
 
-
-graph_limit1.SaveAs("modelIndepedantLimit"+year+"Lower.root")
-graph_limit2.SaveAs("modelIndepedantLimit"+year+"Upper.root")
