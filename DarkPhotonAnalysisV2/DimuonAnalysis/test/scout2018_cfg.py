@@ -6,7 +6,7 @@ params = VarParsing('analysis')
 
 params.register(
     'isMC', 
-    True, 
+    False, 
     VarParsing.multiplicity.singleton,VarParsing.varType.bool,
     'Flag to indicate whether the sample is simulation or data'
 )
@@ -81,8 +81,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 # Set the process options -- Display summary at the end, enable unscheduled execution
 process.options = cms.untracked.PSet( 
     allowUnscheduled = cms.untracked.bool(True),
-    wantSummary      = cms.untracked.bool(False),
-    SkipEvent = cms.untracked.vstring('ProductNotFound')
+    wantSummary      = cms.untracked.bool(False) 
 )
 
 # How many events to process
@@ -91,8 +90,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50000) )
 # Input EDM files
 process.source = cms.Source("PoolSource",
 	fileNames = cms.untracked.vstring([
-#        'file:/eos/cms/store/user/dsperka/MC/darkPhoton/Feb7/aod_ggH_m1.root'
-        'file:input.root'
+	'/store/data/Run2018D/ScoutingCaloMuon/RAW/v1/000/321/283/00000/0AF726D6-E09F-E811-966B-FA163E89B4C8.root'	
+
 	])
 )
 
@@ -116,7 +115,7 @@ else :
 
 # Define the services needed for the treemaker
 process.TFileService = cms.Service("TFileService", 
-    fileName = cms.string("output.root")
+    fileName = cms.string("scout.root")
 )
 
 # Tree for the generator weights
@@ -164,9 +163,8 @@ process.mmtree = cms.EDAnalyzer('ScoutingTreeMaker2017',
 )
 
 # Analysis path
-process.p = cms.Path(  process.gtStage2Digis + process.mmtree)
-#if params.isMC : 
-#    process.p = cms.Path(process.gentree + process.mmtree)
-#else : 
-#    process.p = cms.Path(  process.gtStage2Digis + process.mmtree)
+if params.isMC : 
+    process.p = cms.Path(process.gentree + process.mmtree)
+else : 
+    process.p = cms.Path(  process.gtStage2Digis + process.mmtree)
 

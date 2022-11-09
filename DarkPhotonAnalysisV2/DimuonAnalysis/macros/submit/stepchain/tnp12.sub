@@ -1,0 +1,23 @@
+executable = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/stepchain_20182.sh 
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ""
+transfer_output_files = ""
+arguments = "scout_$(ProcId).root 2018/UpsilonMuMu_UpsilonPt6_TuneCP5_13TeV-pythia8-evtgen/UpsilonMuMu_UpsilonPt6_2018/201224_041244/0000 upsilon"
+universe = vanilla
+queue 428
+#log = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).log
+#output = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).out
+#error = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/log/test1.$(Process).err
++JobFlavour = "espresso"
+#queue INPUT from data17Dlist.list
+#queue INPUT from lousyList3.list
+
+
+# or
+# queue INPUT in (
+# file1
+# file2
+# file3
+# ..
+# )

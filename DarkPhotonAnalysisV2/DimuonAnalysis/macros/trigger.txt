@@ -1,0 +1,11 @@
+2017
+L1_DoubleMu_15_7                          4          2^0
+L1_DoubleMu0er1p5_SQ_OS_dR_Max1p4         10         2^1
+L1_DoubleMu4p5er2p0_SQ_OS_Mass7to18       11         2^2
+L1_DoubleMu4_SQ_OS_dR_Max1p2              12         2^3
+
+2018
+L1_DoubleMu_15_7                          2
+L1_DoubleMu0er1p5_SQ_OS_dR_Max1p4         6
+L1_DoubleMu4p5er2p0_SQ_OS_Mass7to18       7
+L1_DoubleMu4p5_SQ_OS_dR_Max1p2            11

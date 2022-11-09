@@ -161,7 +161,6 @@ class ScoutingTreeMaker2017 : public edm::one::EDAnalyzer<edm::one::SharedResour
         // 4-vector of genparticles, and their PDG IDs            
         std::vector<TLorentzVector>  gens;
         std::vector<char>            gid;
-        std::vector<double>            gvtx;
 
         // TTree carrying the event weight information
         TTree* tree;
@@ -283,7 +282,6 @@ void ScoutingTreeMaker2017::analyze(const edm::Event& iEvent, const edm::EventSe
     // Clear all the vectors for every event
     gens.clear(); 
     gid.clear();
-    gvtx.clear();
     vtxX.clear();
     vtxY.clear();
     vtxZ.clear();
@@ -402,14 +400,17 @@ void ScoutingTreeMaker2017::analyze(const edm::Event& iEvent, const edm::EventSe
     // GEN information
     if (isMC && gensH.isValid()) {
         for (auto gens_iter = gensH->begin(); gens_iter != gensH->end(); ++gens_iter) {
-            if (abs(gens_iter->pdgId()) > 0.0 && abs(gens_iter->pdgId())==13 && gens_iter->fromHardProcessFinalState()) {
+            if (gens_iter->pdgId() ==  23 || abs(gens_iter->pdgId()) == 24 || gens_iter->pdgId() == 25) {
                 TLorentzVector g4;
                 g4.SetPtEtaPhiM(gens_iter->pt(), gens_iter->eta(), gens_iter->phi(), gens_iter->mass());
                 gens.push_back(g4);
                 gid.push_back(char(gens_iter->pdgId()));
-		double y = gens_iter->vy();
-		double x = gens_iter->vx();
-		gvtx.push_back(sqrt(pow(x,2) + pow(y,2)));
+            }
+            if (abs(gens_iter->pdgId()) > 10 && abs(gens_iter->pdgId()) < 17 && gens_iter->fromHardProcessFinalState()) {
+                TLorentzVector g4;
+                g4.SetPtEtaPhiM(gens_iter->pt(), gens_iter->eta(), gens_iter->phi(), gens_iter->mass());
+                gens.push_back(g4);
+                gid.push_back(char(gens_iter->pdgId()));
             }
         }
     }
@@ -442,7 +443,6 @@ void ScoutingTreeMaker2017::beginJob() {
     // Gen info
     tree->Branch("gens"                 , "std::vector<TLorentzVector>"  , &gens     , 32000, 0);
     tree->Branch("gid"                  , "std::vector<char>"            , &gid      );
-    tree->Branch("gvtx"                  , "std::vector<double>"            , &gvtx      );    
     }
     tree->Branch("lumSec", &lumSec, "lumSec/i" );
     tree->Branch("run", &run, "run/i");
@@ -454,8 +454,8 @@ void ScoutingTreeMaker2017::beginJob() {
     // Pileup info
     tree->Branch("nvtx"                 , &nvtx                          , "nvtx/i"       );
     tree->Branch("rho"                  , &rho                           , "rho/D"        );
-    if (isMC)
-      tree->Branch("putrue"               , &putrue                        , "putrue/i");
+    //if (isMC)
+      //tree->Branch("putrue"               , &putrue                        , "putrue/i");
 
     // Muon info
     tree->Branch("vtxX"                 , "std::vector<float>"           , &vtxX      , 32000, 0);

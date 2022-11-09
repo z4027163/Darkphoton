@@ -1,0 +1,49 @@
+executable = /afs/cern.ch/work/w/wangz/DarkPhotonAnalysisV2/DimuonAnalysis/macros/addmva.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ""
+transfer_output_files = ""
+output = log/$(Process).stdout
+error = log/$(Process).stderr
+log = log/$(Process).log
+universe = vanilla
+queue arguments from (
+    "tree_123.root   2017C  2017"
+    "tree_218.root   2017C  2017"
+    "tree_78.root   2017C  2017"
+    "tree_113.root   2017E  2017"
+    "tree_182.root   2017E  2017"
+    "tree_201.root   2017E  2017"
+    "tree_203.root   2017E  2017"
+    "tree_205.root   2017E  2017"
+    "tree_207.root   2017E  2017"
+    "tree_210.root   2017E  2017"
+    "tree_215.root   2017E  2017"
+    "tree_237.root   2017E  2017"
+    "tree_239.root   2017E  2017"
+    "tree_248.root   2017E  2017"
+    "tree_249.root   2017E  2017"
+    "tree_252.root   2017E  2017"
+    "tree_254.root   2017E  2017"
+    "tree_269.root   2017E  2017"
+    "tree_27.root   2017E  2017"
+    "tree_275.root   2017E  2017"
+    "tree_287.root   2017E  2017"
+    "tree_289.root   2017E  2017"
+    "tree_94.root   2017E  2017"
+    "tree_341.root   2017F  2017"
+    "tree_342.root   2017F  2017"
+    "tree_343.root   2017F  2017"
+    "tree_344.root   2017F  2017"
+    "tree_351.root   2017F  2017"
+    "tree_352.root   2017F  2017"
+    "tree_54.root   2017F  2017"
+    "tree_233.root   2018A  2018"
+    "tree_253.root   2018A  2018"
+    "tree_254.root   2018A  2018"
+    "tree_46.root   2018B  2018"
+    "tree_1034.root   2018D2  2018"
+    "tree_1232.root   2018D2  2018"
+)
+
++JobFlavour = "espresso"

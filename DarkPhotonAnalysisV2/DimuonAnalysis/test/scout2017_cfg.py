@@ -81,8 +81,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 # Set the process options -- Display summary at the end, enable unscheduled execution
 process.options = cms.untracked.PSet( 
     allowUnscheduled = cms.untracked.bool(True),
-    wantSummary      = cms.untracked.bool(False),
-    SkipEvent = cms.untracked.vstring('ProductNotFound')
+    wantSummary      = cms.untracked.bool(False) 
 )
 
 # How many events to process
@@ -92,8 +91,31 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 process.source = cms.Source("PoolSource",
 	fileNames = cms.untracked.vstring([
 #		'file:/afs/cern.ch/user/b/bortigno/public/darkphoton/DP_MZd35Epsilon2e-2_fall17_AODSIM_step3.root',
-                'file:/eos/cms/store/user/dsperka/MC/darkPhoton/Feb7/aod_ggH_m1.root',
-#		'root://cmsxrootd.fnal.gov//store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/34E87E12-F983-E711-BDBD-02163E01A4C2.root'
+		#'/store/mc/RunIIFall17DRPremix/QCD_Pt-15to20_MuEnrichedPt5_TuneCP5_13TeV_pythia8/AODSIM/94X_mc2017_realistic_v10-v1/710000/D0953F14-71EB-E711-A97D-02163E01377D.root',
+		#'/store/mc/RunIIFall17DRPremix/Muplus_Pt1000-gun/AODSIM/RECOSIMstep_94X_mc2017_realistic_v10-v1/50000/082B4547-48EB-E711-B491-001E67E6F783.root',
+        	#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/397/00000/AEFA61EC-D783-E711-AB3E-02163E013445.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/397/00000/B4716947-DF83-E711-9B9A-02163E014281.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/397/00000/BE7B27E8-DA83-E711-94E1-02163E01A1C4.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/397/00000/C8ECBD88-CE83-E711-8783-02163E014641.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/397/00000/CE811785-F183-E711-B346-02163E0134FB.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/397/00000/D60780E1-CB83-E711-B281-02163E01429E.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/397/00000/E0F09602-E283-E711-BE54-02163E01A518.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/398/00000/A805E352-F583-E711-9B0B-02163E01263A.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/34E87E12-F983-E711-BDBD-02163E01A4C2.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/6E97F22C-0E84-E711-830A-02163E011AC9.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/805388B8-0084-E711-A1F1-02163E01A3B7.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/94C20668-F583-E711-9C21-02163E01A628.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/96843482-0284-E711-8049-02163E01A788.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/C8923AB0-0184-E711-8841-02163E01A3B7.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/417/00000/08AE8987-1684-E711-93E6-02163E013480.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/417/00000/0AEE291F-2484-E711-832D-02163E012197.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/417/00000/58A46538-2584-E711-8715-02163E01A5FD.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/183/00000/549B1286-A881-E711-8855-02163E01A420.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/183/00000/5AF3FE8B-A881-E711-B978-02163E01446B.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/183/00000/8A8CCC8B-A881-E711-B400-02163E01A4C0.root',
+		#'/store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/417/00000/62C76E07-2084-E711-B113-02163E01A5AA.root',*/
+		#'/store/data/Run2018B/ScoutingCaloMuon/RAW/v1/000/317/392/00000/6412DF26-0968-E811-BFD9-FA163E33236D.root',
+		'root://cmsxrootd.fnal.gov//store/data/Run2017C/ScoutingCaloMuon/RAW/v1/000/301/399/00000/34E87E12-F983-E711-BDBD-02163E01A4C2.root'
 	])
 )
 
