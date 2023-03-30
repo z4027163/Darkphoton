@@ -64,7 +64,7 @@
 
 using namespace std;
 
-void MultiMakeCardsAndWS_ptcut(){
+void MultiMakeCardsAndWS_run3(){
 
   TString year[2] = {"2017","2018"};
   for(int y = 0; y < 2; y++){ //year
@@ -77,14 +77,14 @@ void MultiMakeCardsAndWS_ptcut(){
   	TFile* file2 = NULL; // Below 3 GeV
 	//if (year == "2017") file=TFile::Open("/eos/cms/store/group/phys_exotica/darkPhoton/jakob/newProd/2017/ScoutingRunD/mergedHistos_v1.root");
         if (year[y] == "2017"){
-          file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2017.root"); //38.7
-          file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2017.root"); 
-      //    file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2017.root");
+          file=TFile::Open("~/dphist/sigma_p013/mergedHistos_mva_2017.root"); //38.7
+          file2=TFile::Open("~/dphist/sigma_p013/mergedHistos_jpsi0p015_2017.root"); 
+      //    file2=TFile::Open("~/dphist/kaonhypo/mergedHistos_jpsi0p015_2017.root");
         }
         else if (year[y] == "2018"){
-          file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2018.root"); //61.3 fb -1
-          file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2018.root"); //61.3 fb -1
-     //     file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2018.root");
+          file=TFile::Open("~/dphist/sigma_p013/mergedHistos_mva_2018.root"); //61.3 fb -1
+          file2=TFile::Open("~/dphist/sigma_p013/mergedHistos_jpsi0p015_2018.root"); //61.3 fb -1
+      //    file2=TFile::Open("~/dphist/kaonhypo/mergedHistos_jpsi0p015_2018.root");
         }
   //PREPARE EXPECTED NUMBER OF SIGNAL EVENTS PER CATEGORY
 	//X-SECTION GRAPH
@@ -118,6 +118,16 @@ void MultiMakeCardsAndWS_ptcut(){
 		acceptances[j-1] = acc_teff->GetEfficiency(j);
 		m_acceptances[j-1] = acc_teff->GetPassedHistogram()->GetBinCenter(j);
 		}
+	/*TFile* acc_file = TFile::Open("acc_dyturbo.root");
+	TH1D* acc_teff = (TH1D*)acc_file->Get("s_m");
+	int nbins_acc=acc_teff->GetNbinsX();
+	double acceptances[nbins_acc];
+	double m_acceptances[nbins_acc];
+	for (int j=1; j<=nbins_acc; j++){
+		acceptances[j-1] = acc_teff->GetBinContent(j);
+		cout<<"The acceptence is \n"<<acceptances[j-1]<<endl;		
+		m_acceptances[j-1] = acc_teff->GetBinCenter(j);
+		}*/
 	TGraph* accgraph 	= new TGraph(nbins_acc,m_acceptances,acceptances);
 	
 	//TF1* accF = (TF1*)acc_file->Get("fit_func");
@@ -134,18 +144,20 @@ void MultiMakeCardsAndWS_ptcut(){
 	//EFFICIENCY
 	//get acceptance from hist
 	//TFile* eff_file = TFile::Open("l1_corrCuts_eff_Data_newAllTrigLowMass_"+year[y]+"_mll_dR_wieghted.root");
-	TFile* eff_file = TFile::Open("llptCutEfficiencies/modifiedMllEffD"+year[y]+"high.root");
-        TFile* eff_file1 = TFile::Open("llptCutEfficiencies/modifiedMllEffD"+year[y]+"low.root");
-	TEfficiency *teff, *teff1;
-	teff = ((TEfficiency*)eff_file->Get("honemllD_clone"));
-	teff1 = ((TEfficiency*)eff_file1->Get("honemllD_clone"));
-        teff->Draw();
-        teff->Paint("");
-        teff1->Draw();
-        teff1->Paint("");
+	TFile* eff_file = TFile::Open("modifiedMllEff"+year[y]+".root");
+	//TFile* eff_file = TFile::Open("l1_corrCuts_eff_Data_newAllTrigLowMass_2018_mll_dR_wieghted.root");
+	TEfficiency *teff;
+	if (year[y] == "2017"){
+	  teff = ((TEfficiency*)eff_file->Get("honemllD_clone"));
+	}
+	else if (year[y] == "2018"){
+	  teff = ((TEfficiency*)eff_file->Get("honemll_clone"));
+	}
 
+	//cout<<teff<<endl;
+	teff->Draw();
+	teff->Paint("");
 	TGraphAsymmErrors* effgraph = teff->GetPaintedGraph();
-        TGraphAsymmErrors* effgraph1 = teff1->GetPaintedGraph();
         //reverse
 //        { int N=effgraph->GetN(); int i=0; while(i<N) {effgraph->SetPointY(i,effgraph->GetPintY(i)*0.05)} }
 
@@ -224,25 +236,25 @@ void MultiMakeCardsAndWS_ptcut(){
         TGraph* accValues = new TGraph(190);
         TGraph* plotValues = new TGraph(190);
 
-        double rescale[6]={0.05,0.142,0.771,0.018,0.896,1.0}; //[0] is reverse id
-        TString trg[6]={"","_trg1","_trg2","_trg3","_trg4",""};
-        int kk=5;
-        
+        double rescale=4; //[0] is pvd scale 93%
+       
+        //og for(int i=160; i<370; i++) 
 	for(int i=160; i<370; i++){
                 double pvd_scale=1;
+             
 	  	//get the histograms
                 if (i<177) continue;
 		if (i>368) continue;
 	        TH1D* catA;
 	        TH1D* catB;
 	        if (i > 290){ 
-                  pvd_scale=0.93;
 		  catA=(TH1D*)file->Get(Form("massforLimit_CatA%d",i));
 		  catB=(TH1D*)file->Get(Form("massforLimit_CatB%d",i));
+                  pvd_scale=0.93;
 	        }
 		else{
-		  catA=(TH1D*)file2->Get(Form("massforLimit%s_CatA%d",trg[kk].Data(),i));
-		  catB=(TH1D*)file2->Get(Form("massforLimit%s_CatB%d",trg[kk].Data(),i));
+		  catA=(TH1D*)file2->Get(Form("massforLimit_CatA%d",i));
+		  catB=(TH1D*)file2->Get(Form("massforLimit_CatB%d",i));
 	        }
 	  	//TH1D* catC=(TH1D*)file->Get(Form("massforLimit_CatC%d",i));
 
@@ -265,6 +277,11 @@ void MultiMakeCardsAndWS_ptcut(){
 		}
 	  	catAMVA->Add(catBMVA);
 		catAMVA->Rebin(2);
+
+                //run 3 projections, 4 times more stats
+                catA->Scale(4);
+                catAMVA->Scale(4);
+
 	  	delete catBMVA;
 		double countMVA = catAMVA->Integral();
 
@@ -273,6 +290,8 @@ void MultiMakeCardsAndWS_ptcut(){
 	  	TH1D* catBNO=(TH1D*)IDfileNO->Get(Form("massforLimit_CatB%d",i));
 	  	catANO->Add(catBNO);
 		catANO->Rebin(2);
+                catANO->Scale(4);
+
 	  	delete catBNO;
 		double countNO = catANO->Integral();
 	
@@ -321,22 +340,16 @@ void MultiMakeCardsAndWS_ptcut(){
 	  	if (dontfit) continue;
 
 		double effcuts = countMVA / countNO;
+		//if (mass < 2.0) effcuts = 0.383615;
 		if (mass < 2.0) effcuts = 0.05*mass+0.68;
-//                if(mass>4.0) effcuts = effcuts*(0.05*mass+0.5);  //high mass ptcut scale
-//                if(mass<3.0) effcuts = effcuts*(1.21-0.08*(mass-1));  //low mass ptcut scale
-                if(mass>4.0) effcuts = effcuts*(0.04*mass+0.5);  //high mass ptcut scale
-                if(mass<3.0) effcuts = effcuts*(1.21-0.08*mass);  //low mass ptcut scale
-
                 //reverse
 //                if (mass < 3.0) effcuts = 0.03;
 		cout << "The ID efficiency is " << effcuts << " at mass " << mass ; 
 		cout << ".  The numerator is " << countMVA << " and the denominator is " << countNO << "\n"; 
-                double triggereff=effgraph->Eval(mass,0,"S");
-                if(i<290) triggereff=effgraph1->Eval(mass,0,"S");
 
                 effValues->SetPoint(i, mass, effcuts);
                 accValues->SetPoint(i, mass, accgraph->Eval(mass,0,""));
-                plotValues->SetPoint(i, mass, effcuts*accgraph->Eval(mass,0,"S")*triggereff*rescale[kk]);
+                plotValues->SetPoint(i, mass, effcuts*accgraph->Eval(mass,0,"S")*effgraph->Eval(mass,0,"S")*rescale*pvd_scale);
 
 		//Calculate log normal uncertainty for trigger and selection efficiency
 		double triggSysVal = tsys->GetBinContent(tsys->FindBin(mass));
@@ -570,18 +583,17 @@ void MultiMakeCardsAndWS_ptcut(){
 		newcardShape << Form("process 		signalModel_generic  	bkg_mass	\n");
 		newcardShape << Form("process 		0    		1	   	\n");
 		newcardShape << Form("rate    		%f  		%f		\n",
-				     effcuts*triggereff*luminosity*rescale[kk]*pvd_scale, catA->Integral());
+				     effcuts*effgraph->Eval(mass,0,"S")*luminosity*rescale*pvd_scale, catA->Integral());
 		//newcardShape << Form("lumi13TeV_2017 lnN 	1.023 	-\n");
 		newcardShape << Form("lumi13TeV_2018 lnN 	1.026 	-\n");
 		newcardShape << Form("id_eff_mva_2018 lnN	%f 	-\n", selSys);
 		newcardShape << Form("eff_trig_2018 lnN         %f        -\n", triggSys);
-                newcardShape << Form("pdf_index_"+year[y]+" discrete \n");
-		//newcardShape << Form("sig_shape_2018 lnN        1.10 	-\n");
-		//newcardShape << Form("eff_mu_13TeV_2017 lnN	1.015 	-\n");
                 double eff_cut_unc=1.05; // ID eff entanglement
                 if(i<290) eff_cut_unc=1.08;
                 newcardShape << Form("eff_cut lnN         %f        -\n",eff_cut_unc );
-
+                newcardShape << Form("pdf_index_"+year[y]+" discrete \n");
+		//newcardShape << Form("sig_shape_2018 lnN        1.10 	-\n");
+		//newcardShape << Form("eff_mu_13TeV_2017 lnN	1.015 	-\n");
 		if (year[y] == "2017"){
 		  newcardShape << Form("bkg_norm_2017 rateParam CatAB bkg_mass 1.0\n");
 		}
@@ -612,7 +624,7 @@ void MultiMakeCardsAndWS_ptcut(){
 	}
 	f_ws->Close();
 
-	/*
+	
 	TCanvas c_fVal("c_fVal", "c_fVal", 950, 1020);
 	//effValues->GetYaxis()->SetRangeUser(0.00001, 1);
 	effValues->GetXaxis()->SetRangeUser(0.8, 9);
@@ -634,7 +646,7 @@ void MultiMakeCardsAndWS_ptcut(){
 	legend->Draw();
 	//c_fVal.SetLogy();
         c_fVal.SaveAs("ID_EffBareDistribution.png");
-	*/
+	
 
 
 	for (int j=1; j<=nbins_tsys; j++){

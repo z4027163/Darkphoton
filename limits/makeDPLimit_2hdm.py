@@ -106,7 +106,7 @@ base_eps = 0.02 #epsilon for which the cross sections are computed
 
 a = 1 # for lumi projection (6.6->100)
 
-files = glob("ptcut/combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
+files = glob("ptcut/IPsig/combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
 
 d_m = {}
 for fname in files:
@@ -127,9 +127,15 @@ for d,m_fname in d_m:
 
     unc_up=uncgraph.Eval(m,0,"S")
     unc_dow=uncgraph.Eval(m,0,"S")
+   
     if (m>3):
         unc_up=0.10
         unc_dow=0.10
+    #add 0.3 to acceptance uncertainty
+    unc_up = sqrt(unc_up*unc_up+0.3*0.3)
+    unc_dow = sqrt(unc_dow*unc_dow+0.3*0.3)
+
+
     if (m < 3):
             f=ROOT.TFile.Open(fname)
             tree=f.Get("limit")
@@ -204,6 +210,7 @@ for d,m_fname in d_m:
 c1=ROOT.TCanvas("c1","c1",700,500)
 #c1.SetGrid()
 c1.SetLogy()
+#qier
 c1.SetLogx()
 
 mg=ROOT.TMultiGraph()
@@ -306,15 +313,22 @@ mg.Add(graph_limitObs2,"l")
 
 mg.Draw("APC")
 mg.GetXaxis().SetRangeUser(1.2,9.)
-mg.GetYaxis().SetRangeUser(0.002,0.999)
+mg.GetYaxis().SetRangeUser(0.002,10.99)
 #mg.GetYaxis().SetTitle("xSec*BR [pb]")
 #mg.GetXaxis().SetTitle("Dark Photon Mass [GeV]")
 mg.GetYaxis().SetTitle("sin(#theta_{H})")
-mg.GetYaxis().SetTitleOffset(0.9)
+mg.GetYaxis().SetTitleOffset(1.0)
 mg.GetYaxis().SetTitleSize(0.05)
-mg.GetXaxis().SetTitle("m(a) [GeV]")
+mg.GetXaxis().SetTitle("m_{a} [GeV]")
 mg.GetXaxis().SetTitleSize(0.05)
+mg.GetXaxis().SetTitleOffset(1.2)
 mg.GetXaxis().SetMoreLogLabels()
+
+mg.GetYaxis().SetLabelSize(0.05);
+mg.GetXaxis().SetLabelSize(0.05);
+mg.GetXaxis().SetLabelOffset(0.0);
+
+c1.SetBottomMargin(0.13);
 c1.Update()
 legend=ROOT.TLegend(0.5,0.6,0.8,0.9)
 cmsTag=ROOT.TLatex(0.13,0.917,"#scale[1.1]{CMS}")
@@ -325,26 +339,30 @@ cmsTag2=ROOT.TLatex(0.215,0.917,"#scale[0.825]{#bf{#it{Preliminary}}}")
 cmsTag2.SetNDC()
 cmsTag2.SetTextAlign(11)
 #cmsTag.SetTextFont(61)
-cmsTag2.Draw()
+#cmsTag2.Draw()
 cmsTag3=ROOT.TLatex(0.90,0.917,"#scale[0.9]{#bf{"+str(lumi)+" fb^{-1} (13 TeV)}}")
 cmsTag3.SetNDC()
 cmsTag3.SetTextAlign(31)
 #cmsTag.SetTextFont(61)
 cmsTag3.Draw()
-leg=ROOT.TLegend(0.65, 0.65,0.85, 0.85)  
+leg=ROOT.TLegend(0.60, 0.54,0.80, 0.85)  
 leg.SetBorderSize( 0 )
 leg.SetFillStyle( 1001 )
 leg.SetFillColor(kWhite) 
+leg.SetTextSize(0.05)
 leg.AddEntry( graph_limitObs1 , "Observed",  "LP" )
 leg.AddEntry( graph_limit1 , "Expected",  "L" )
 leg.AddEntry( graph_limit168up, "#pm 1#sigma",  "F" ) 
 leg.AddEntry( graph_limit195up, "#pm 2#sigma",  "F" ) 
 leg.AddEntry( graph_limit1_unc, "theoretical #pm 1#sigma",  "F" )
 
+#qier
+tail=""
 leg.Draw("same")
+c1.SetBottomMargin(0.13);
 c1.SaveAs("limit"+year+"2HDM.root")
-c1.SaveAs("limit"+year+"2HDM.pdf")
-c1.SaveAs("limit"+year+"2HDM.png")
+c1.SaveAs("limit"+year+"2HDM"+tail+".pdf")
+c1.SaveAs("limit"+year+"2HDM"+tail+".png")
 c2=ROOT.TCanvas("c2","c2",700,500)
 c2.SetLogy()
 cmsTag.Draw()

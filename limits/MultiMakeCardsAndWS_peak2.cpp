@@ -64,7 +64,7 @@
 
 using namespace std;
 
-void MultiMakeCardsAndWS_ptcut(){
+void MultiMakeCardsAndWS_peak2(){
 
   TString year[2] = {"2017","2018"};
   for(int y = 0; y < 2; y++){ //year
@@ -77,14 +77,14 @@ void MultiMakeCardsAndWS_ptcut(){
   	TFile* file2 = NULL; // Below 3 GeV
 	//if (year == "2017") file=TFile::Open("/eos/cms/store/group/phys_exotica/darkPhoton/jakob/newProd/2017/ScoutingRunD/mergedHistos_v1.root");
         if (year[y] == "2017"){
-          file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2017.root"); //38.7
-          file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2017.root"); 
-      //    file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2017.root");
+          file=TFile::Open("~/dphist/sigma_p013/mergedHistos_mva_2017.root"); //38.7
+          file2=TFile::Open("~/dphist/sigma_p013/mergedHistos_jpsi0p015_2017.root"); 
+      //    file2=TFile::Open("~/dphist/kaonhypo/mergedHistos_jpsi0p015_2017.root");
         }
         else if (year[y] == "2018"){
-          file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2018.root"); //61.3 fb -1
-          file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2018.root"); //61.3 fb -1
-     //     file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2018.root");
+          file=TFile::Open("~/dphist/sigma_p013/mergedHistos_mva_2018.root"); //61.3 fb -1
+          file2=TFile::Open("~/dphist/sigma_p013/mergedHistos_jpsi0p015_2018.root"); //61.3 fb -1
+      //    file2=TFile::Open("~/dphist/kaonhypo/mergedHistos_jpsi0p015_2018.root");
         }
   //PREPARE EXPECTED NUMBER OF SIGNAL EVENTS PER CATEGORY
 	//X-SECTION GRAPH
@@ -118,6 +118,16 @@ void MultiMakeCardsAndWS_ptcut(){
 		acceptances[j-1] = acc_teff->GetEfficiency(j);
 		m_acceptances[j-1] = acc_teff->GetPassedHistogram()->GetBinCenter(j);
 		}
+	/*TFile* acc_file = TFile::Open("acc_dyturbo.root");
+	TH1D* acc_teff = (TH1D*)acc_file->Get("s_m");
+	int nbins_acc=acc_teff->GetNbinsX();
+	double acceptances[nbins_acc];
+	double m_acceptances[nbins_acc];
+	for (int j=1; j<=nbins_acc; j++){
+		acceptances[j-1] = acc_teff->GetBinContent(j);
+		cout<<"The acceptence is \n"<<acceptances[j-1]<<endl;		
+		m_acceptances[j-1] = acc_teff->GetBinCenter(j);
+		}*/
 	TGraph* accgraph 	= new TGraph(nbins_acc,m_acceptances,acceptances);
 	
 	//TF1* accF = (TF1*)acc_file->Get("fit_func");
@@ -134,18 +144,20 @@ void MultiMakeCardsAndWS_ptcut(){
 	//EFFICIENCY
 	//get acceptance from hist
 	//TFile* eff_file = TFile::Open("l1_corrCuts_eff_Data_newAllTrigLowMass_"+year[y]+"_mll_dR_wieghted.root");
-	TFile* eff_file = TFile::Open("llptCutEfficiencies/modifiedMllEffD"+year[y]+"high.root");
-        TFile* eff_file1 = TFile::Open("llptCutEfficiencies/modifiedMllEffD"+year[y]+"low.root");
-	TEfficiency *teff, *teff1;
-	teff = ((TEfficiency*)eff_file->Get("honemllD_clone"));
-	teff1 = ((TEfficiency*)eff_file1->Get("honemllD_clone"));
-        teff->Draw();
-        teff->Paint("");
-        teff1->Draw();
-        teff1->Paint("");
+	TFile* eff_file = TFile::Open("modifiedMllEff"+year[y]+".root");
+	//TFile* eff_file = TFile::Open("l1_corrCuts_eff_Data_newAllTrigLowMass_2018_mll_dR_wieghted.root");
+	TEfficiency *teff;
+	if (year[y] == "2017"){
+	  teff = ((TEfficiency*)eff_file->Get("honemllD_clone"));
+	}
+	else if (year[y] == "2018"){
+	  teff = ((TEfficiency*)eff_file->Get("honemll_clone"));
+	}
 
+	//cout<<teff<<endl;
+	teff->Draw();
+	teff->Paint("");
 	TGraphAsymmErrors* effgraph = teff->GetPaintedGraph();
-        TGraphAsymmErrors* effgraph1 = teff1->GetPaintedGraph();
         //reverse
 //        { int N=effgraph->GetN(); int i=0; while(i<N) {effgraph->SetPointY(i,effgraph->GetPintY(i)*0.05)} }
 
@@ -165,9 +177,9 @@ void MultiMakeCardsAndWS_ptcut(){
 	// TGraph* effgraph 	= new TGraph(nbins_eff,m_effA,effA);
 	//double effcuts = 0.64; //from http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/329 
 
-	effgraph->SaveAs("output/effgraph.root");
-	accgraph->SaveAs("output/accF.root");
-	xsecgraph->SaveAs("output/xsecgraph.root");
+	//effgraph->SaveAs("output/effgraph.root");
+	//accgraph->SaveAs("output/accF.root");
+	//xsecgraph->SaveAs("output/xsecgraph.root");
 
 	
 	//scale
@@ -191,8 +203,6 @@ void MultiMakeCardsAndWS_ptcut(){
 	TFile* IDfileNO = NULL;
 	IDfileNO=TFile::Open("~/dphist/lowDY/lowDY_noid.root");	
 
-
-
    //LOOP OVER MASS INDICES AND MAKE THE CARDS/WORKSPACES
 	double mass = -1.;
 	double rel_reso=0.013;//temporary
@@ -202,43 +212,31 @@ void MultiMakeCardsAndWS_ptcut(){
 	w->var("alpha1")->setConstant(true);//all this should actually be automatic. Check!!
 	w->var("alpha2")->setConstant(true);
 	w->var("n1")->setConstant(true);
-	w->var("frac_gau")->setConstant(true);
+	w->var("frac_gau")->setConstant(false);
 	w->var("gau_reso_scale")->setConstant(true);
 
 	w->Print();
-
-
-	RooWorkspace *upsilon = (RooWorkspace*)f_ws->Get("dpworkspace");
-        upsilon->loadSnapshot("calibrated");
-        upsilon->var("alpha1")->setConstant(true);//all this should actually be automatic. Check!!
-        upsilon->var("alpha2")->setConstant(true);
-        upsilon->var("n1")->setConstant(true);
-        upsilon->var("frac_gau")->setConstant(true);
-        upsilon->var("gau_reso_scale")->setConstant(true);
-	upsilon->var("M_generic")->setVal(9.46);
-	upsilon->var("M_generic")->setConstant(true);
-	upsilon->var("res_rel_generic")->setVal(rel_reso);
-	upsilon->var("res_rel_generic")->setConstant(true);
 
         TGraph* effValues = new TGraph(190);
         TGraph* accValues = new TGraph(190);
         TGraph* plotValues = new TGraph(190);
 
-        double rescale[6]={0.05,0.142,0.771,0.018,0.896,1.0}; //[0] is reverse id
+        double rescale[6]={0.93,0.142,0.771,0.018,0.896,1.0}; //[0] is pvd scale 93%
         TString trg[6]={"","_trg1","_trg2","_trg3","_trg4",""};
         int kk=5;
-        
-	for(int i=160; i<370; i++){
+       
+        //og for(int i=160; i<370; i++) 
+	for(int i=265; i<290; i++){
                 double pvd_scale=1;
+             
 	  	//get the histograms
-                if (i<177) continue;
 		if (i>368) continue;
 	        TH1D* catA;
 	        TH1D* catB;
 	        if (i > 290){ 
-                  pvd_scale=0.93;
 		  catA=(TH1D*)file->Get(Form("massforLimit_CatA%d",i));
 		  catB=(TH1D*)file->Get(Form("massforLimit_CatB%d",i));
+                  pvd_scale=0.93;
 	        }
 		else{
 		  catA=(TH1D*)file2->Get(Form("massforLimit%s_CatA%d",trg[kk].Data(),i));
@@ -287,56 +285,45 @@ void MultiMakeCardsAndWS_ptcut(){
 		//compute mass point and define ROOFit variables
 	  	bool dontfit=false;
 
-	  	//reduce the mass bin width to avoid being inside the forbidden regions (resonances)
-	  	// for (auto fbin : unfittable_regions){
-	  	// 	if ((massLow>fbin[0] && massHigh<fbin[1]) || (massLow<fbin[0] && massHigh>fbin[1])) dontfit=true; //the current bin is completely inside a forbidden region, or viceversa
-	  	// 	else if ((massHigh-fbin[0])*(massHigh-fbin[1])<=0){ //high edge of our bin is in a forbidden region
-	  	// 		massHigh = fbin[0];
-	  	// 	}
-	  	// 	else if ((massLow-fbin[0])*(massLow-fbin[1])<=0){ //low edge of our bin is in a forbidden region
-	  	// 		massLow = fbin[1];
-	  	// 	}
-	  	// 	if ((massHigh-massLow)<0.2*massBinWidth) dontfit=true; //skip if the mass bin after this reduction is too small (or negative, which would mean the original mass bin was all inside a forbidden region)
-	  	// }
-	  	// if (dontfit) continue;
+                //get peak normalization
+                TFile* peak_ws = TFile::Open("shape_peaks/ws_jpsi_"+year[y]+".root", "READ");
+                RooWorkspace *w_peak = (RooWorkspace*)peak_ws->Get("dpworkspace");
+                w_peak->var("alphaL")->setConstant(true);
+                w_peak->var("frac_gau")->setConstant(true);
+                w_peak->var("gau_reso_scale")->setConstant(true);
+                w_peak->var("mean")->setConstant(true);
+                w_peak->var("n")->setConstant(true);
+                w_peak->var("res_rel")->setConstant(true);
+                RooRealVar *n_exp_peak = (RooRealVar*)w_peak->var("nsig");
+                RooAddPdf *peakModel = (RooAddPdf*)w_peak->pdf("sig");
+                //RooCBShape *peakModel = (RooCBShape*)w_peak->pdf("sig_CB"); 
+                RooRealVar *x_peak = (RooRealVar*)w_peak->var("m2mu");
+                x_peak->setRange("r1",massLow,massHigh);
+                RooAbsReal* intX = peakModel->createIntegral(*x_peak,NormSet(*x_peak),Range("r1"));
+                cout << "integral=" << intX->getVal() << endl;
+                double norm_peak=(intX->getVal())*(n_exp_peak->getVal());
+                cout << "norm_peak=" << norm_peak << endl;
+                double frac_peak = norm_peak/catA->Integral();
+                cout << "frac_peak=" << frac_peak << endl;
+                RooRealVar frac_peak_fit("frac_peak","frac_peak",frac_peak,0,1);  
+                //frac_peak_fit.setConstant(true);              
 
+                cout << "massLow=" << massLow << " high=" << massHigh << endl;   
 	  	mass = 0.5*(massLow+massHigh);
 		if (mass < 1.0) continue;
 		if (mass >= 8.265) continue;
-		if ((mass >= 2.6) && (mass <= 4.16)) continue;
-	  	for (auto fbin : unfittable_regions){
-	  		if ((mass>fbin[0] && mass<fbin[1])) dontfit=true; //the current point is inside a forbidden region
-	  		else if ((massHigh-fbin[0])*(massHigh-fbin[1])<=-0.1){ //high edge of our bin is in a forbidden region
-			  //massHigh = fbin[0];
-			  //massLow = massHigh-massBinWidth;
-			  dontfit=true;
-	  		}
-	  		else if ((massLow-fbin[0])*(massLow-fbin[1])<=-0.1){ //low edge of our bin is in a forbidden region
-			  //massLow = fbin[1];
-			  //massHigh = massLow+massBinWidth;
-			  dontfit=true;
-	  		}
-			if ((mass-massLow)<4*rel_reso*mass || (massHigh-mass)<4*rel_reso*mass) dontfit=true; //too close to the bin edge
-	  	}
-	  	if (dontfit) continue;
 
 		double effcuts = countMVA / countNO;
+		//if (mass < 2.0) effcuts = 0.383615;
 		if (mass < 2.0) effcuts = 0.05*mass+0.68;
-//                if(mass>4.0) effcuts = effcuts*(0.05*mass+0.5);  //high mass ptcut scale
-//                if(mass<3.0) effcuts = effcuts*(1.21-0.08*(mass-1));  //low mass ptcut scale
-                if(mass>4.0) effcuts = effcuts*(0.04*mass+0.5);  //high mass ptcut scale
-                if(mass<3.0) effcuts = effcuts*(1.21-0.08*mass);  //low mass ptcut scale
-
                 //reverse
 //                if (mass < 3.0) effcuts = 0.03;
 		cout << "The ID efficiency is " << effcuts << " at mass " << mass ; 
 		cout << ".  The numerator is " << countMVA << " and the denominator is " << countNO << "\n"; 
-                double triggereff=effgraph->Eval(mass,0,"S");
-                if(i<290) triggereff=effgraph1->Eval(mass,0,"S");
 
                 effValues->SetPoint(i, mass, effcuts);
                 accValues->SetPoint(i, mass, accgraph->Eval(mass,0,""));
-                plotValues->SetPoint(i, mass, effcuts*accgraph->Eval(mass,0,"S")*triggereff*rescale[kk]);
+                plotValues->SetPoint(i, mass, effcuts*accgraph->Eval(mass,0,"S")*effgraph->Eval(mass,0,"S")*rescale[kk]*pvd_scale);
 
 		//Calculate log normal uncertainty for trigger and selection efficiency
 		double triggSysVal = tsys->GetBinContent(tsys->FindBin(mass));
@@ -353,10 +340,12 @@ void MultiMakeCardsAndWS_ptcut(){
 		RooRealVar* m2mu = w->var("m2mu");
 		m2mu->setMax(massHigh);
 		m2mu->setMin(massLow);
+                m2mu->setRange("r2",massLow,massHigh);
+
+                x_peak->setMax(massHigh);
+                x_peak->setMin(massLow);
 
 		RooAddPdf* signalModel = (RooAddPdf*)w->pdf("signalModel_generic");
-
-                RooAddPdf* upsilonBG = (RooAddPdf*)upsilon->pdf("signalModel_generic");
 
 		//define the signal model
 		w->var("M_generic")->setVal(mass);
@@ -381,7 +370,8 @@ void MultiMakeCardsAndWS_ptcut(){
                 RooExponential bkg_model_exp4_2017("bkg_model_exp4_2017", "bkg_model_exp4_2017", *m2mu, car1_2017);
                 //Product of the two
                 RooProdPdf bkg_model_pol4xexp_2017("bkg_model_pol4xexp_2017", "bkg_model_pol4xexp_2017", bkg_model_line4_2017, bkg_model_exp4_2017);
-                bkg_model_pol4xexp_2017.chi2FitTo(data_obs);
+                RooAddPdf bkg_model_pol4xexp_2017_add("bkg_model_pol4xexp_2017_add", "bkg_model_pol4xexp_2017_add", RooArgList(*peakModel,bkg_model_pol4xexp_2017), frac_peak_fit);
+                bkg_model_pol4xexp_2017_add.chi2FitTo(data_obs);
 
                 RooRealVar lar1_2018("lar1_2018", "lar1_2018", 0.0, -10.0, 10.0);
                 RooRealVar lar2_2018("lar2_2018", "lar2_2018", 0.0, -10.0, 10.0);
@@ -394,35 +384,19 @@ void MultiMakeCardsAndWS_ptcut(){
                 RooExponential bkg_model_exp4_2018("bkg_model_exp4_2018", "bkg_model_exp4_2018", *m2mu, car1_2018);
                 //Product of the two
                 RooProdPdf bkg_model_pol4xexp_2018("bkg_model_pol4xexp_2018", "bkg_model_pol4xexp_2018", bkg_model_line4_2018, bkg_model_exp4_2018);
-                bkg_model_pol4xexp_2018.chi2FitTo(data_obs);
+                RooAddPdf bkg_model_pol4xexp_2018_add("bkg_model_pol4xexp_2018_add", "bkg_model_pol4xexp_2018_add",RooArgList(*peakModel,bkg_model_pol4xexp_2018),frac_peak_fit);
+                bkg_model_pol4xexp_2018_add.chi2FitTo(data_obs);
 
 
 		
-
-	/*	
-		RooRealVar war1_2017("war1_2017", "war1_2017", 0.2, 0, 10);
-		RooRealVar war2_2017("war2_2017", "war2_2017", 1.5, 0, 10);
-		RooRealVar war3_2017("war3_2017", "war3_2017", 2.0, 0, 10);
-		RooArgList wlist_2017(war1_2017, war2_2017, war3_2017);
-		RooBernstein bkg_model_bern3_2017("bkg_model_bern3_2017", "bkg_model_bern3_2017", *m2mu, wlist_2017);
-		bkg_model_bern3_2017.fitTo(data_obs);		
-
-
-		RooRealVar war1_2018("war1_2018", "war1_2018", 0.2, 0, 10);
-		RooRealVar war2_2018("war2_2018", "war2_2018", 1.5, 0, 10);
-		RooRealVar war3_2018("war3_2018", "war3_2018", 2.0, 0, 10);
-		RooArgList wlist_2018(war1_2018, war2_2018, war3_2018);
-		RooBernstein bkg_model_bern3_2018("bkg_model_bern3_2018", "bkg_model_bern3_2018", *m2mu, wlist_2018);
-		bkg_model_bern3_2018.fitTo(data_obs);
-	*/	
-
 		RooRealVar par1_2017("par1_2017", "par1_2017", 0.2, 0, 10);
 		RooRealVar par2_2017("par2_2017", "par2_2017", 1.5, 0, 10);
 		RooRealVar par3_2017("par3_2017", "par3_2017", 2.0, 0, 10);
 		RooRealVar par4_2017("par4_2017", "par4_2017", 2.0, 0, 10);
 		RooArgList alist_2017(par1_2017, par2_2017, par3_2017, par4_2017);
 		RooBernstein bkg_model_bern4_2017("bkg_model_bern4_2017", "bkg_model_bern4_2017", *m2mu, alist_2017);
-		bkg_model_bern4_2017.fitTo(data_obs);		
+                RooAddPdf bkg_model_bern4_2017_add("bkg_model_bern4_2017_add", "bkg_model_bern4_2017_add",RooArgList(*peakModel,bkg_model_bern4_2017),frac_peak_fit);
+		bkg_model_bern4_2017_add.fitTo(data_obs);		
 		
 
 		RooRealVar par1_2018("par1_2018", "par1_2018", 0.2, 0, 10);
@@ -431,7 +405,8 @@ void MultiMakeCardsAndWS_ptcut(){
 		RooRealVar par4_2018("par4_2018", "par4_2018", 2.0, 0, 10);
 		RooArgList alist_2018(par1_2018, par2_2018, par3_2018, par4_2018);
 		RooBernstein bkg_model_bern4_2018("bkg_model_bern4_2018", "bkg_model_bern4_2018", *m2mu, alist_2018);
-		bkg_model_bern4_2018.fitTo(data_obs);
+                RooAddPdf bkg_model_bern4_2018_add("bkg_model_bern4_2018_add", "bkg_model_bern4_2018_add",RooArgList(*peakModel,bkg_model_bern4_2018),frac_peak_fit);
+                bkg_model_bern4_2018_add.fitTo(data_obs);  
 		
 		
 		RooRealVar bar1_2017("bar1_2017", "bar1_2017", -0.5, -10, 10);                            
@@ -455,7 +430,8 @@ void MultiMakeCardsAndWS_ptcut(){
 		RooArgList explist_2017(exp1_2017,exp2_2017,exp3_2017,exp4_2017,exp5_2017,exp6_2017);
 		RooArgList expclist_2017(bf1_2017,bf2_2017,bf3_2017,bf4_2017,bf5_2017);
 		RooAddPdf bkg_model_exp7_2017("bkg_model_exp7_2017","bkg_model_exp7_2017",explist_2017,expclist_2017,true);
-		bkg_model_exp7_2017.fitTo(data_obs);
+                RooAddPdf bkg_model_exp7_2017_add("bkg_model_exp7_2017_add","bkg_model_exp7_2017_add",RooArgList(*peakModel,bkg_model_exp7_2017),frac_peak_fit);
+		bkg_model_exp7_2017_add.fitTo(data_obs);
 
 
 		RooRealVar bar1_2018("bar1_2018", "bar1_2018", -0.5, -10, 10);                            
@@ -484,7 +460,8 @@ void MultiMakeCardsAndWS_ptcut(){
 		RooArgList explist_2018(exp1_2018,exp2_2018,exp3_2018,exp4_2018,exp5_2018,exp6_2018);
 		RooArgList expclist_2018(bf1_2018,bf2_2018,bf3_2018,bf4_2018,bf5_2018);
 		RooAddPdf bkg_model_exp7_2018("bkg_model_exp7_2018","bkg_model_exp7_2018",explist_2018,expclist_2018,true);
-		bkg_model_exp7_2018.fitTo(data_obs);
+                RooAddPdf bkg_model_exp7_2018_add("bkg_model_exp7_2018_add","bkg_model_exp7_2018_add",RooArgList(*peakModel,bkg_model_exp7_2018),frac_peak_fit);
+		bkg_model_exp7_2018_add.fitTo(data_obs);
 
 
 
@@ -500,7 +477,8 @@ void MultiMakeCardsAndWS_ptcut(){
                 RooArgList plawlist1_2017(plaw1_2017, bern3_2017);
                 RooArgList plawclist1_2017(pf1_2017, bfp1_2017);
                 RooAddPdf bkg_model_bern3p1_2017("bkg_model_bern3p1_2017","bkg_model_bern3p1_2017",plawlist1_2017,plawclist1_2017,true);
-                bkg_model_bern3p1_2017.fitTo(data_obs);
+                RooAddPdf bkg_model_bern3p1_2017_add("bkg_model_bern3p1_2017_add","bkg_model_bern3p1_2017_add",RooArgList(*peakModel,bkg_model_bern3p1_2017),frac_peak_fit);
+                bkg_model_bern3p1_2017_add.fitTo(data_obs);
 
                 RooRealVar pow_1_2018("pow_1_2018","exponent of power law",0,-10,10);
                 RooRealVar pf1_2018("pf1_2018","frac of power law",0.2,0.0,1.0);
@@ -514,29 +492,30 @@ void MultiMakeCardsAndWS_ptcut(){
                 RooArgList plawlist1_2018(plaw1_2018, bern3_2018);
                 RooArgList plawclist1_2018(pf1_2018, bfp1_2018);
                 RooAddPdf bkg_model_bern3p1_2018("bkg_model_bern3p1_2018","bkg_model_bern3p1_2018",plawlist1_2018,plawclist1_2018,true);
-                bkg_model_bern3p1_2018.fitTo(data_obs);
+                RooAddPdf bkg_model_bern3p1_2018_add("bkg_model_bern3p1_2018_add","bkg_model_bern3p1_2018_add",RooArgList(*peakModel,bkg_model_bern3p1_2018),frac_peak_fit);
+                bkg_model_bern3p1_2018_add.fitTo(data_obs);
 
 
 
 
                 RooCategory pdf_index_2017("pdf_index_2017","Index of the background PDF which is active");
 		RooArgList bkg_pdf_list_2017;
-                bkg_pdf_list_2017.add(bkg_model_bern4_2017);
+                bkg_pdf_list_2017.add(bkg_model_bern4_2017_add);
 
-                bkg_pdf_list_2017.add(bkg_model_pol4xexp_2017);
-                bkg_pdf_list_2017.add(bkg_model_exp7_2017);
-                bkg_pdf_list_2017.add(bkg_model_bern3p1_2017);
+                bkg_pdf_list_2017.add(bkg_model_pol4xexp_2017_add);
+                bkg_pdf_list_2017.add(bkg_model_exp7_2017_add);
+                bkg_pdf_list_2017.add(bkg_model_bern3p1_2017_add);
 
                 RooMultiPdf bkg_model_2017("bkg_model_2017", "All Pdfs", pdf_index_2017, bkg_pdf_list_2017);
 		bkg_model_2017.setCorrectionFactor(0.5);
 
                 RooCategory  pdf_index_2018("pdf_index_2018","Index of the background PDF which is active");
                 RooArgList bkg_pdf_list_2018;		
-                bkg_pdf_list_2018.add(bkg_model_bern4_2018);
+                bkg_pdf_list_2018.add(bkg_model_bern4_2018_add);
 
-                bkg_pdf_list_2018.add(bkg_model_pol4xexp_2018);
-                bkg_pdf_list_2018.add(bkg_model_exp7_2018);
-                bkg_pdf_list_2018.add(bkg_model_bern3p1_2018);
+                bkg_pdf_list_2018.add(bkg_model_pol4xexp_2018_add);
+                bkg_pdf_list_2018.add(bkg_model_exp7_2018_add);
+                bkg_pdf_list_2018.add(bkg_model_bern3p1_2018_add);
 
                 RooMultiPdf bkg_model_2018("bkg_model_2018", "All Pdfs", pdf_index_2018, bkg_pdf_list_2018);	       
                 bkg_model_2018.setCorrectionFactor(0.5);
@@ -546,16 +525,17 @@ void MultiMakeCardsAndWS_ptcut(){
 		RooWorkspace dpworkspace("dpworkspace", "");
 		dpworkspace.import(data_obs);
 		dpworkspace.import(*signalModel);
+                //dpworkspace.import(*peakModel);
 		if (year[y] == "2017"){
 		  dpworkspace.import(bkg_model_2017);
 		}else if (year[y] == "2018"){
 		  dpworkspace.import(bkg_model_2018); 
 		}
-		dpworkspace.writeToFile(Form("output/dpWorkspace"+year[y]+suff+"_%d.root",i));
-
+		dpworkspace.writeToFile(Form("output_peak/dpWorkspace"+year[y]+suff+"_%d.root",i));
+                cout << "wtf???" << endl;
 		//write the datacard
 		char inputShape[200];
-		sprintf(inputShape,"output/dpCard_"+year[y]+suff+"_m%.3f_%d.txt",mass,i);
+		sprintf(inputShape,"output_peak/dpCard_"+year[y]+suff+"_m%.3f_%d.txt",mass,i);
 		ofstream newcardShape;
 		newcardShape.open(inputShape);
 		newcardShape << Form("imax * number of channels\n");
@@ -563,56 +543,40 @@ void MultiMakeCardsAndWS_ptcut(){
 		newcardShape << Form("kmax * number of nuisance parameters\n");
 		newcardShape << Form("shapes data_obs	CatAB dpWorkspace"+year[y]+suff+"_%d.root dpworkspace:data_obs\n",i);
 		newcardShape << Form("shapes bkg_mass	CatAB dpWorkspace"+year[y]+suff+"_%d.root dpworkspace:bkg_model_"+year[y]+"\n",i);
+                //newcardShape << Form("shapes peak_generic        CatAB  dpWorkspace"+year[y]+suff+"_%d.root  dpworkspace:sig\n",i);
 		newcardShape << Form("shapes signalModel_generic	CatAB dpWorkspace"+year[y]+suff+"_%d.root dpworkspace:signalModel_generic\n",i);
 		newcardShape << Form("bin		CatAB\n");
 		newcardShape << Form("observation 	-1.0\n");
-		newcardShape << Form("bin     		CatAB		CatAB		\n");
-		newcardShape << Form("process 		signalModel_generic  	bkg_mass	\n");
-		newcardShape << Form("process 		0    		1	   	\n");
-		newcardShape << Form("rate    		%f  		%f		\n",
-				     effcuts*triggereff*luminosity*rescale[kk]*pvd_scale, catA->Integral());
+		newcardShape << Form("bin     		CatAB		CatAB	\n");
+		newcardShape << Form("process 		signalModel_generic  	bkg_mass\n");
+		newcardShape << Form("process 		0    		1	   \n");
+		newcardShape << Form("rate    		%f  		%f	   \n",
+				     effcuts*effgraph->Eval(mass,0,"S")*luminosity*rescale[kk]*pvd_scale, catA->Integral());
 		//newcardShape << Form("lumi13TeV_2017 lnN 	1.023 	-\n");
-		newcardShape << Form("lumi13TeV_2018 lnN 	1.026 	-\n");
-		newcardShape << Form("id_eff_mva_2018 lnN	%f 	-\n", selSys);
-		newcardShape << Form("eff_trig_2018 lnN         %f        -\n", triggSys);
+		newcardShape << Form("lumi13TeV_2018 lnN 	1.026 	-     \n");
+		newcardShape << Form("id_eff_mva_2018 lnN	%f 	-    \n", selSys);
+		newcardShape << Form("eff_trig_2018 lnN         %f        -    \n", triggSys);
+                double eff_cut_unc=1.05; // ID eff entanglement
+                if(i<290) eff_cut_unc=1.08;
+                newcardShape << Form("eff_cut lnN         %f        -     \n",eff_cut_unc );
                 newcardShape << Form("pdf_index_"+year[y]+" discrete \n");
 		//newcardShape << Form("sig_shape_2018 lnN        1.10 	-\n");
 		//newcardShape << Form("eff_mu_13TeV_2017 lnN	1.015 	-\n");
-                double eff_cut_unc=1.05; // ID eff entanglement
-                if(i<290) eff_cut_unc=1.08;
-                newcardShape << Form("eff_cut lnN         %f        -\n",eff_cut_unc );
-
 		if (year[y] == "2017"){
 		  newcardShape << Form("bkg_norm_2017 rateParam CatAB bkg_mass 1.0\n");
 		}
 		if (year[y] == "2018"){
 		  newcardShape << Form("bkg_norm_2018 rateParam CatAB bkg_mass 1.0\n");
 		}
+                newcardShape << Form("res_rel_generic param 0.013 0.002\n");
 		newcardShape << Form("");
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
 		newcardShape.close();
-		/*
-		double par1val = par1.getValV();
-		double par2val = par2.getValV();
-		double par3val = par3.getValV();
-		double par4val = par4.getValV();
-		double par1err = par1.getError();
-		double par2err = par2.getError();
-		double par3err = par3.getError();
-		double par4err = par4.getError();
 
-                //write the error params
-                errorparamShape << Form("massPoint%.3f --setParameterRanges par1=%f,%f:", mass, par1val-5.0*par1err, par1val+5.0*par1err);
-                errorparamShape << Form("par2=%f,%f:", par2val-5.0*par2err, par2val+5.0*par2err);
-                errorparamShape << Form("par3=%f,%f:", par3val-5.0*par3err, par3val+5.0*par3err);
-                errorparamShape << Form("par4=%f,%f\n", par4val-5.0*par4err, par4val+5.0*par4err);
-		*/
-
+                peak_ws->Close();
 	}
 	f_ws->Close();
-
-	/*
+	
 	TCanvas c_fVal("c_fVal", "c_fVal", 950, 1020);
 	//effValues->GetYaxis()->SetRangeUser(0.00001, 1);
 	effValues->GetXaxis()->SetRangeUser(0.8, 9);
@@ -634,7 +598,7 @@ void MultiMakeCardsAndWS_ptcut(){
 	legend->Draw();
 	//c_fVal.SetLogy();
         c_fVal.SaveAs("ID_EffBareDistribution.png");
-	*/
+	
 
 
 	for (int j=1; j<=nbins_tsys; j++){

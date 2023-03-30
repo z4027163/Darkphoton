@@ -16,6 +16,7 @@ from math import sqrt
 
 year = sys.argv[1]
 
+
 fff = open("eps2.txt", "w")
 #fff2 = open("eps2_obs.txt", "w")
 
@@ -92,7 +93,7 @@ base_eps = 0.02 #epsilon for which the cross sections are computed
 
 a = (base_eps**2)*eps2scale/sqrt(lumi_project/lumi) # for lumi projection (6.6->100)
 
-files = glob("combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
+files = glob("dual/reso0p2/combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
 
 d_m = {}
 for fname in files:
@@ -153,8 +154,8 @@ for d,m_fname in d_m:
             mass1.append(m)
             masserr1.append(0.)
 #            fff.write("{0} {1}\n".format(m, math.sqrt(tree.limit*a)))
-#            fff.write("{0} {1}\n".format(m, a_exp))
-            fff.write("{0} {1}\n".format(m, a_obs))
+            fff.write("{0} {1}\n".format(m, a_exp))
+#            fff.write("{0} {1}\n".format(m, a_obs))
             
     if (m > 3):
             f=ROOT.TFile.Open(fname)
@@ -191,12 +192,13 @@ for d,m_fname in d_m:
             mass2.append(m)
             masserr2.append(0.)
 #            fff.write("{0} {1}\n".format(m, math.sqrt(tree.limit*a)))
-#            fff.write("{0} {1}\n".format(m, a_exp))
-            fff.write("{0} {1}\n".format(m, a_obs))   
+            fff.write("{0} {1}\n".format(m, a_exp))
+#            fff.write("{0} {1}\n".format(m, a_obs))   
 
 c1=ROOT.TCanvas("c1","c1",700,500)
 #c1.SetGrid()
 c1.SetLogy()
+#qier:
 c1.SetLogx()
 
 mg=ROOT.TMultiGraph()
@@ -216,7 +218,7 @@ graph_limit1.GetXaxis().SetRangeUser(10,70)
 graph_limit1.GetXaxis().SetMoreLogLabels()
 graph_limit1.GetYaxis().SetTitle("#sigma(pp#rightarrow A)#times BR(A#rightarrow #mu#mu)[pb]")
 graph_limit1.GetYaxis().SetTitleSize(2)
-graph_limit1.GetXaxis().SetTitle("Dark Photon Mass [GeV]")
+graph_limit1.GetXaxis().SetTitle("m_{Z_{D}} [GeV]")
 
 graph_limit2=ROOT.TGraph(len(mass2),mass2,limit2)
 graph_limit2.SetTitle("graph_limit2")
@@ -323,27 +325,36 @@ graph_limit268up.SetMarkerColor(kGreen)
 
 mg.Add(graph_limit195up,"3")
 mg.Add(graph_limit168up,"3")
-#mg.Add(graph_limit1_unc,"3")
+#qier: 
+mg.Add(graph_limit1_unc,"3")
 mg.Add(graph_limit1,"l")
 mg.Add(graph_limitObs1,"l")
 mg.Add(graph_limit295up,"3")
 mg.Add(graph_limit268up,"3")
-#mg.Add(graph_limit2_unc,"3")
+#qier:
+mg.Add(graph_limit2_unc,"3")
 mg.Add(graph_limit2,"l")
 mg.Add(graph_limitObs2,"l")
 
 
 mg.Draw("APC")
 mg.GetXaxis().SetRangeUser(1.2,9.)
-mg.GetYaxis().SetRangeUser(1e-8,1e-4)
-#mg.GetYaxis().SetTitle("xSec*BR [pb]")
-#mg.GetXaxis().SetTitle("Dark Photon Mass [GeV]")
+mg.GetYaxis().SetRangeUser(1e-8,2e-3)
 mg.GetYaxis().SetTitle("#epsilon^{2}")
-mg.GetYaxis().SetTitleOffset(0.9)
+
+mg.GetYaxis().SetTitleOffset(1.0)
 mg.GetYaxis().SetTitleSize(0.05)
-mg.GetXaxis().SetTitle("Dark Photon Mass [GeV]")
+
+mg.GetXaxis().SetTitle("m_{Z_{D}} [GeV]")
 mg.GetXaxis().SetTitleSize(0.05)
+mg.GetXaxis().SetTitleOffset(1.2)
 mg.GetXaxis().SetMoreLogLabels()
+
+mg.GetYaxis().SetLabelSize(0.05);
+mg.GetXaxis().SetLabelSize(0.05);
+mg.GetXaxis().SetLabelOffset(0.0);
+
+c1.SetBottomMargin(0.13);
 c1.Update()
 legend=ROOT.TLegend(0.5,0.6,0.8,0.9)
 cmsTag=ROOT.TLatex(0.13,0.917,"#scale[1.1]{CMS}")
@@ -354,26 +365,32 @@ cmsTag2=ROOT.TLatex(0.215,0.917,"#scale[0.825]{#bf{#it{Preliminary}}}")
 cmsTag2.SetNDC()
 cmsTag2.SetTextAlign(11)
 #cmsTag.SetTextFont(61)
-cmsTag2.Draw()
+#cmsTag2.Draw()
 cmsTag3=ROOT.TLatex(0.90,0.917,"#scale[0.9]{#bf{"+str(lumi)+" fb^{-1} (13 TeV)}}")
 cmsTag3.SetNDC()
 cmsTag3.SetTextAlign(31)
 #cmsTag.SetTextFont(61)
 cmsTag3.Draw()
-leg=ROOT.TLegend(0.65, 0.65,0.85, 0.85)  
+#leg=ROOT.TLegend(0.65, 0.65,0.85, 0.85)  
+leg=ROOT.TLegend(0.6, 0.54,0.8, 0.85)
 leg.SetBorderSize( 0 )
 leg.SetFillStyle( 1001 )
 leg.SetFillColor(kWhite) 
+leg.SetTextSize(0.05)
 leg.AddEntry( graph_limitObs1 , "Observed",  "LP" )
 leg.AddEntry( graph_limit1 , "Expected",  "L" )
 leg.AddEntry( graph_limit168up, "#pm 1#sigma",  "F" ) 
 leg.AddEntry( graph_limit195up, "#pm 2#sigma",  "F" ) 
-#leg.AddEntry( graph_limit1_unc, "theoretical #pm 1#sigma",  "F" )
+#qier
+leg.AddEntry( graph_limit1_unc, "theoretical #pm 1#sigma",  "F" )
 
 leg.Draw("same")
-c1.SaveAs("limit"+year+"DarkPhoton_eps2_fidturbo.root")
-c1.SaveAs("limit"+year+"DarkPhoton_eps2_fidturbo.pdf")
-c1.SaveAs("limit"+year+"DarkPhoton_eps2_fidturbo.png")
+c1.SetBottomMargin(0.13);
+#qier
+tail = "_unc"
+c1.SaveAs("limit"+year+"DarkPhoton_eps2.root")
+c1.SaveAs("limit"+year+"DarkPhoton_eps2"+tail+".pdf")
+c1.SaveAs("limit"+year+"DarkPhoton_eps2"+tail+".png")
 c2=ROOT.TCanvas("c2","c2",700,500)
 c2.SetLogy()
 cmsTag.Draw()

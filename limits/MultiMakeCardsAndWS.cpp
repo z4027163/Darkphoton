@@ -595,26 +595,10 @@ void MultiMakeCardsAndWS(){
 		if (year[y] == "2018"){
 		  newcardShape << Form("bkg_norm_2018 rateParam CatAB bkg_mass 1.0\n");
 		}
+                newcardShape << Form("res_rel_generic param 0.013 0.002\n");
 		newcardShape << Form("");
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
 		newcardShape.close();
-		/*
-		double par1val = par1.getValV();
-		double par2val = par2.getValV();
-		double par3val = par3.getValV();
-		double par4val = par4.getValV();
-		double par1err = par1.getError();
-		double par2err = par2.getError();
-		double par3err = par3.getError();
-		double par4err = par4.getError();
-
-                //write the error params
-                errorparamShape << Form("massPoint%.3f --setParameterRanges par1=%f,%f:", mass, par1val-5.0*par1err, par1val+5.0*par1err);
-                errorparamShape << Form("par2=%f,%f:", par2val-5.0*par2err, par2val+5.0*par2err);
-                errorparamShape << Form("par3=%f,%f:", par3val-5.0*par3err, par3val+5.0*par3err);
-                errorparamShape << Form("par4=%f,%f\n", par4val-5.0*par4err, par4val+5.0*par4err);
-		*/
 
 	}
 	f_ws->Close();

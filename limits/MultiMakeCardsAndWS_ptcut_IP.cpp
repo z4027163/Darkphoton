@@ -64,7 +64,7 @@
 
 using namespace std;
 
-void MultiMakeCardsAndWS_ptcut(){
+void MultiMakeCardsAndWS_ptcut_IP(){
 
   TString year[2] = {"2017","2018"};
   for(int y = 0; y < 2; y++){ //year
@@ -73,18 +73,16 @@ void MultiMakeCardsAndWS_ptcut(){
   //WHICH YEAR
 	TString suff="IterV3";
   //INPUT FILE WITH HISTOGRAMS TO FIT BACKGROUND
-  	TFile* file = NULL;  // Above 3 GeV
+        TFile* file = NULL;  // Above 3 GeV
   	TFile* file2 = NULL; // Below 3 GeV
 	//if (year == "2017") file=TFile::Open("/eos/cms/store/group/phys_exotica/darkPhoton/jakob/newProd/2017/ScoutingRunD/mergedHistos_v1.root");
         if (year[y] == "2017"){
-          file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2017.root"); //38.7
           file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2017.root"); 
-      //    file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2017.root");
+          file=TFile::Open("~/dphist/ptcut/IPsig/mergedHistos_jpsi0p015_2017.root");
         }
         else if (year[y] == "2018"){
-          file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2018.root"); //61.3 fb -1
           file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2018.root"); //61.3 fb -1
-     //     file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2018.root");
+          file=TFile::Open("~/dphist/ptcut/IPsig/mergedHistos_jpsi0p015_2018.root");
         }
   //PREPARE EXPECTED NUMBER OF SIGNAL EVENTS PER CATEGORY
 	//X-SECTION GRAPH
@@ -230,21 +228,20 @@ void MultiMakeCardsAndWS_ptcut(){
         
 	for(int i=160; i<370; i++){
                 double pvd_scale=1;
+                //if(i!=225) continue;
 	  	//get the histograms
                 if (i<177) continue;
 		if (i>368) continue;
 	        TH1D* catA;
 	        TH1D* catB;
-	        if (i > 290){ 
-                  pvd_scale=0.93;
-		  catA=(TH1D*)file->Get(Form("massforLimit_CatA%d",i));
-		  catB=(TH1D*)file->Get(Form("massforLimit_CatB%d",i));
-	        }
-		else{
-		  catA=(TH1D*)file2->Get(Form("massforLimit%s_CatA%d",trg[kk].Data(),i));
-		  catB=(TH1D*)file2->Get(Form("massforLimit%s_CatB%d",trg[kk].Data(),i));
-	        }
-	  	//TH1D* catC=(TH1D*)file->Get(Form("massforLimit_CatC%d",i));
+                if (i > 290){
+                  catA=(TH1D*)file->Get(Form("massforLimit_CatA%d",i));
+                  catB=(TH1D*)file->Get(Form("massforLimit_CatB%d",i));
+                }
+                else{
+                  catA=(TH1D*)file2->Get(Form("massforLimit%s_CatA%d",trg[kk].Data(),i));
+                  catB=(TH1D*)file2->Get(Form("massforLimit%s_CatB%d",trg[kk].Data(),i));
+                }
 
 	  	//we're using only one category, so we sum all histos
 	  	catA->Add(catB);
@@ -255,14 +252,8 @@ void MultiMakeCardsAndWS_ptcut(){
 	  	//get the histograms
 		TH1D* catAMVA;
                 TH1D* catBMVA;
-		if (i > 290){
-		  catAMVA=(TH1D*)IDfileMVA->Get(Form("massforLimit_CatA%d",i));
-		  catBMVA=(TH1D*)IDfileMVA->Get(Form("massforLimit_CatB%d",i));
-		} 
-		else{
 		  catAMVA=(TH1D*)IDfileMVA2->Get(Form("massforLimit_CatA%d",i));
                   catBMVA=(TH1D*)IDfileMVA2->Get(Form("massforLimit_CatB%d",i));
-		}
 	  	catAMVA->Add(catBMVA);
 		catAMVA->Rebin(2);
 	  	delete catBMVA;
@@ -322,9 +313,7 @@ void MultiMakeCardsAndWS_ptcut(){
 
 		double effcuts = countMVA / countNO;
 		if (mass < 2.0) effcuts = 0.05*mass+0.68;
-//                if(mass>4.0) effcuts = effcuts*(0.05*mass+0.5);  //high mass ptcut scale
-//                if(mass<3.0) effcuts = effcuts*(1.21-0.08*(mass-1));  //low mass ptcut scale
-                if(mass>4.0) effcuts = effcuts*(0.04*mass+0.5);  //high mass ptcut scale
+                if(mass>4.0) effcuts = effcuts*0.84;  //high mass ptcut scale
                 if(mass<3.0) effcuts = effcuts*(1.21-0.08*mass);  //low mass ptcut scale
 
                 //reverse
@@ -345,7 +334,19 @@ void MultiMakeCardsAndWS_ptcut(){
 
 
 		double selSysVal = selUncH->GetBinContent(selUncH->FindBin(mass));
-                double selSys = 1.00 + abs(selSysVal);
+                // mass   1   2   5   8 GeV
+                // 2017  6.5 6.5 5.6 4.4 %
+                // 2018  4.1 3.9 4.4 3.9 %
+               
+               if (year[y] == "2017"){
+                   if(i<290) selSysVal=0.065;
+                   else selSysVal=0.06;
+               }
+              if (year[y] == "2018"){
+                   selSysVal=0.05;
+               }
+               //ID unc for jpsi at high mass 
+               double selSys = 1.00 + abs(selSysVal);
                 cout << ".  The value of sel syst is " <<  selSys << "\n";
 
 		//cout<<"Spline: "<<effAgraph->Eval(mass,0,"S")<<endl;
@@ -579,7 +580,7 @@ void MultiMakeCardsAndWS_ptcut(){
 		//newcardShape << Form("sig_shape_2018 lnN        1.10 	-\n");
 		//newcardShape << Form("eff_mu_13TeV_2017 lnN	1.015 	-\n");
                 double eff_cut_unc=1.05; // ID eff entanglement
-                if(i<290) eff_cut_unc=1.08;
+                eff_cut_unc=1.08;
                 newcardShape << Form("eff_cut lnN         %f        -\n",eff_cut_unc );
 
 		if (year[y] == "2017"){
@@ -588,9 +589,9 @@ void MultiMakeCardsAndWS_ptcut(){
 		if (year[y] == "2018"){
 		  newcardShape << Form("bkg_norm_2018 rateParam CatAB bkg_mass 1.0\n");
 		}
+                //newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
 		newcardShape << Form("");
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
 		newcardShape.close();
 		/*
 		double par1val = par1.getValV();

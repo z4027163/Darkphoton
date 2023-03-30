@@ -64,7 +64,7 @@
 
 using namespace std;
 
-void MultiMakeCardsAndWS_ptcut(){
+void MultiMakeCardsAndWS_run3_ptcut(){
 
   TString year[2] = {"2017","2018"};
   for(int y = 0; y < 2; y++){ //year
@@ -79,12 +79,12 @@ void MultiMakeCardsAndWS_ptcut(){
         if (year[y] == "2017"){
           file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2017.root"); //38.7
           file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2017.root"); 
-      //    file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2017.root");
+      //    file2=TFile::Open("~/dphist/pt20to30/mergedHistos_jpsi0p015_2017.root");
         }
         else if (year[y] == "2018"){
           file=TFile::Open("~/dphist/ptcut/mergedHistos_mva_2018.root"); //61.3 fb -1
           file2=TFile::Open("~/dphist/ptcut/mergedHistos_jpsi0p015_2018.root"); //61.3 fb -1
-     //     file2=TFile::Open("~/dphist/pt35to40/mergedHistos_jpsi0p015_2018.root");
+     //     file2=TFile::Open("~/dphist/pt20to30/mergedHistos_jpsi0p015_2018.root");
         }
   //PREPARE EXPECTED NUMBER OF SIGNAL EVENTS PER CATEGORY
 	//X-SECTION GRAPH
@@ -224,12 +224,11 @@ void MultiMakeCardsAndWS_ptcut(){
         TGraph* accValues = new TGraph(190);
         TGraph* plotValues = new TGraph(190);
 
-        double rescale[6]={0.05,0.142,0.771,0.018,0.896,1.0}; //[0] is reverse id
-        TString trg[6]={"","_trg1","_trg2","_trg3","_trg4",""};
-        int kk=5;
+        double rescale=3.4; //[0] is reverse id
         
 	for(int i=160; i<370; i++){
                 double pvd_scale=1;
+                //if(i>290) continue;
 	  	//get the histograms
                 if (i<177) continue;
 		if (i>368) continue;
@@ -241,14 +240,16 @@ void MultiMakeCardsAndWS_ptcut(){
 		  catB=(TH1D*)file->Get(Form("massforLimit_CatB%d",i));
 	        }
 		else{
-		  catA=(TH1D*)file2->Get(Form("massforLimit%s_CatA%d",trg[kk].Data(),i));
-		  catB=(TH1D*)file2->Get(Form("massforLimit%s_CatB%d",trg[kk].Data(),i));
+		  catA=(TH1D*)file2->Get(Form("massforLimit_CatA%d",i));
+		  catB=(TH1D*)file2->Get(Form("massforLimit_CatB%d",i));
 	        }
 	  	//TH1D* catC=(TH1D*)file->Get(Form("massforLimit_CatC%d",i));
 
 	  	//we're using only one category, so we sum all histos
 	  	catA->Add(catB);
 	  	//catA->Add(catC);
+	  	catA->Scale(3.4);
+
 	  	delete catB;
 
 		//repeat for both the histograms w/ and w/o the MVA ID
@@ -265,6 +266,7 @@ void MultiMakeCardsAndWS_ptcut(){
 		}
 	  	catAMVA->Add(catBMVA);
 		catAMVA->Rebin(2);
+                catAMVA->Scale(3.4);
 	  	delete catBMVA;
 		double countMVA = catAMVA->Integral();
 
@@ -273,6 +275,7 @@ void MultiMakeCardsAndWS_ptcut(){
 	  	TH1D* catBNO=(TH1D*)IDfileNO->Get(Form("massforLimit_CatB%d",i));
 	  	catANO->Add(catBNO);
 		catANO->Rebin(2);
+                catANO->Scale(3.4);
 	  	delete catBNO;
 		double countNO = catANO->Integral();
 	
@@ -322,11 +325,8 @@ void MultiMakeCardsAndWS_ptcut(){
 
 		double effcuts = countMVA / countNO;
 		if (mass < 2.0) effcuts = 0.05*mass+0.68;
-//                if(mass>4.0) effcuts = effcuts*(0.05*mass+0.5);  //high mass ptcut scale
-//                if(mass<3.0) effcuts = effcuts*(1.21-0.08*(mass-1));  //low mass ptcut scale
-                if(mass>4.0) effcuts = effcuts*(0.04*mass+0.5);  //high mass ptcut scale
-                if(mass<3.0) effcuts = effcuts*(1.21-0.08*mass);  //low mass ptcut scale
-
+                if(mass>4.0) effcuts = effcuts*(0.05*mass+0.5);  //high mass ptcut scale
+                if(mass<3.0) effcuts = effcuts*(1.21-0.08*(mass-1));  //low mass ptcut scale
                 //reverse
 //                if (mass < 3.0) effcuts = 0.03;
 		cout << "The ID efficiency is " << effcuts << " at mass " << mass ; 
@@ -336,7 +336,7 @@ void MultiMakeCardsAndWS_ptcut(){
 
                 effValues->SetPoint(i, mass, effcuts);
                 accValues->SetPoint(i, mass, accgraph->Eval(mass,0,""));
-                plotValues->SetPoint(i, mass, effcuts*accgraph->Eval(mass,0,"S")*triggereff*rescale[kk]);
+                plotValues->SetPoint(i, mass, effcuts*accgraph->Eval(mass,0,"S")*triggereff*rescale);
 
 		//Calculate log normal uncertainty for trigger and selection efficiency
 		double triggSysVal = tsys->GetBinContent(tsys->FindBin(mass));
@@ -570,7 +570,7 @@ void MultiMakeCardsAndWS_ptcut(){
 		newcardShape << Form("process 		signalModel_generic  	bkg_mass	\n");
 		newcardShape << Form("process 		0    		1	   	\n");
 		newcardShape << Form("rate    		%f  		%f		\n",
-				     effcuts*triggereff*luminosity*rescale[kk]*pvd_scale, catA->Integral());
+				     effcuts*triggereff*luminosity*rescale*pvd_scale, catA->Integral());
 		//newcardShape << Form("lumi13TeV_2017 lnN 	1.023 	-\n");
 		newcardShape << Form("lumi13TeV_2018 lnN 	1.026 	-\n");
 		newcardShape << Form("id_eff_mva_2018 lnN	%f 	-\n", selSys);
