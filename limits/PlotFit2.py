@@ -5,17 +5,17 @@ gSystem.Load("$CMSSW_BASE/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so
 gSystem.AddIncludePath("-I$ROOFITSYS/include")
 gSystem.AddIncludePath("-Iinclude/")
                                                       
-
-#file = "1.584_207"
-#file = "1.733_216"
-#file = "1.858_223"
-file = "2.406_249"
+file = "1.176_355"
+#file="4.201_305"
+#file = "2.406_249"
+year = "2017"
 mass = file[:5]
 
-os.system("combine -M MultiDimFit -d output/dpCard_2018IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.1,5 --cminDefaultMinimizerStrategy 0  -n SB -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
-os.system("combine -M MultiDimFit -d output/dpCard_2018IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.001,0.002 --cminDefaultMinimizerStrategy 0  -n Bonly -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
 
+os.system("combine -M MultiDimFit -d output_edge/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0,1 --cminDefaultMinimizerStrategy 0  -n SB -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
+os.system("combine -M MultiDimFit -d output_edge/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.00,0.00 --cminDefaultMinimizerStrategy 0  -n Bonly -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
 
+mass = mass.rstrip('0')
 
 f = TFile("higgsCombineSB.MultiDimFit.mH"+mass+".root","READ")
 fb = TFile("higgsCombineBonly.MultiDimFit.mH"+mass+".root","READ")
@@ -139,6 +139,7 @@ print "doFit:  mychi^2/(nbins-noofparm-1) = "+str(mychi2_final)
 print "doFit:  RooPlot chi^2/(nbins-noofparm-1) = "+str(RooPlot_chi2)
 print "doFit:  RooPlot s+b chi^2/(nbins-noofparm-1) = "+str(RooPlot_chi2_sb)
 
+print "sig=", nsig
 #binmax = testhisto.GetMaximumBin(); 
 #max_entry = testhisto.GetBinContent(binmax);
 #max_entry += max_entry/10.;
@@ -212,4 +213,4 @@ line1.Draw("same");
 
 c1.SaveAs("test.png");
 #c1.SaveAs("test_m1.584.pdf");
-c1.SaveAs("test_m"+mass+"_combinedBKG.pdf");
+c1.SaveAs("test_m"+mass+"_"+year+".pdf");

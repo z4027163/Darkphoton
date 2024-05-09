@@ -468,7 +468,8 @@ void makeDual2_bothD(){
 				     effcuts*effgraph->Eval(mass,0,"S")*luminosity*rescale[kk], catA->Integral());
 		newcardShape << Form("");
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
+
 		newcardShape.close();
 
 	}

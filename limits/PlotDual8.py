@@ -1,12 +1,13 @@
-import os
+import os,sys
 from ROOT import *
 gSystem.AddIncludePath("-I$CMSSW_BASE/src/ ")
 gSystem.Load("$CMSSW_BASE/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so")
 gSystem.AddIncludePath("-I$ROOFITSYS/include")
 gSystem.AddIncludePath("-Iinclude/")
                                                       
-file = "1.858_223"
+file = "1.858_447"
 #file = "1.733_216"
+year = sys.argv[1]
 
 mass = file[:5]
 
@@ -94,21 +95,14 @@ bkgpdf1 = wb.pdf("shapeBkg_bkg_mass_highip")
 bkgpdf1.plotOn(frame, RooFit.LineColor(4), RooFit.Name("new_pdf"));
 nbkg=wb.function("n_exp_binhighip_proc_bkg_mass").getVal()
 
-bkgpdf2 = wb.pdf("shapeBkg_dmm_mass_highip")
-ndmm = wb.function("n_exp_binhighip_proc_dmm_mass").getVal()
+bkgpdf2 = wb.pdf("shapeBkg_dpp_mass_highip")
+ndpp = wb.function("n_exp_binhighip_proc_dpp_mass").getVal()
 
 
 frame2=m2mu.frame()
 
-sigpdf = w.pdf("shapeSig_signalModel_generic_highip")
-nsig = w.function("n_exp_binhighip_proc_signalModel_generic").getVal()
 
-frac1=w.function("n_exp_binhighip_proc_signalModel_generic")
-frac2=w.function("n_exp_binhighip_proc_dmm_mass")
-#bkgpdf2.plotOn(frame2, RooFit.LineColor(8), RooFit.Name("new_pdf"),RooFit.Normalization(ndmm,RooAbsReal.NumEvent))
-addpeak = RooAddPdf("peak", "sig+dmm", RooArgList(sigpdf,bkgpdf2),  RooArgList(frac1,frac2))
-addpeak.plotOn(frame2, RooFit.LineColor(kOrange+1), RooFit.Name("sig_pdf"), RooFit.Normalization(nsig+ndmm,RooAbsReal.NumEvent))
-bkgpdf2.plotOn(frame2, RooFit.LineColor(8), RooFit.Name("dmm_pdf"),RooFit.Normalization(ndmm,RooAbsReal.NumEvent));
+bkgpdf2.plotOn(frame2, RooFit.LineColor(8), RooFit.Name("dpp_pdf"),RooFit.Normalization(ndpp,RooAbsReal.NumEvent));
 
 #####/my chi2 calculation
 sbpdf   = totalpdf .createHistogram("totalpdf"  , m2mu, RooFit.Binning(nbins, xmin, xmax));
@@ -123,7 +117,7 @@ testpdf2.Scale(testhisto.Integral(1,-1)/testpdf2.Integral(1,-1));
 
 #testpdf.Scale(testhisto.Integral(1,-1)/testpdf.Integral(1,-1))
 print "sbpdfnorm=",sbpdf.Integral(1,-1)," pdfnorm=",testpdf.Integral(1,-1)," nexp=",nbkg 
-print "dmmnorm=",ndmm
+print "dppnorm=",ndpp
 print "data=", testhisto.Integral(1,-1)
 #testpdf.Scale(testhisto.Integral(1,-1)/sbpdfnorm);
 
@@ -151,7 +145,7 @@ print "doFit:  mychi^2 s+b = "+str(mychi2sb)
 print "doFit:  mychi^2/(nbins-noofparm-1) = "+str(mychi2_final)
 print "doFit:  RooPlot chi^2/(nbins-noofparm-1) = "+str(RooPlot_chi2)
 print "doFit:  RooPlot s+b chi^2/(nbins-noofparm-1) = "+str(RooPlot_chi2_sb)
-print "dmmnorm=",ndmm
+print "dppnorm=",ndpp
 #binmax = testhisto.GetMaximumBin(); 
 #max_entry = testhisto.GetBinContent(binmax);
 #max_entry += max_entry/10.;
@@ -234,6 +228,6 @@ line1.SetLineWidth(1);
 line1.Draw("same");
 
 
-c1.SaveAs("test4_m"+mass+".png");
+c1.SaveAs("test4_m"+mass+"_"+year+".png");
 #c1.SaveAs("test_m1.584.pdf");
-c1.SaveAs("test4_m"+mass+"_combinedBKG.pdf");
+c1.SaveAs("test4_m"+mass+"_"+year+".pdf");

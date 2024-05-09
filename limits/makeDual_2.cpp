@@ -446,9 +446,10 @@ void makeDual_2(){
 		newcardShape << Form("process 		0    		1          2  \n");
 		newcardShape << Form("rate    		%f  		%f	   %f  \n",
 				     effcuts*effgraph->Eval(mass,0,"S")*luminosity*rescale[kk], catA->Integral());
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
+
 		newcardShape << Form("");
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
 		newcardShape.close();
 
 	}

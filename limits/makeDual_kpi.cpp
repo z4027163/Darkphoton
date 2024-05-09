@@ -568,10 +568,10 @@ void makeDual_kpi(){
 		}
 		if (year[y] == "2018"){
 		  newcardShape << Form("bkg_norm_2018 rateParam CatAB bkg_mass 1.0\n");
-               //   newcardShape << Form("dkpi_norm_2018 rateParam * dkpi_mass 1.0 [0.2,5]");
 		}
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
+
 		newcardShape.close();
 
 	}

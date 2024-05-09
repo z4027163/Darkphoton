@@ -64,7 +64,7 @@
 
 using namespace std;
 
-void MultiMakeCardsAndWS_peak(){
+void MultiMakeCardsAndWS_peak_psi(){
 
   TString year[2] = {"2017","2018"};
   for(int y = 0; y < 2; y++){ //year
@@ -226,7 +226,7 @@ void MultiMakeCardsAndWS_peak(){
         int kk=5;
        
         //og for(int i=160; i<370; i++) 
-	for(int i=257; i<265; i++){
+	for(int i=303; i<305; i++){
                 double pvd_scale=1;
              
 	  	//get the histograms
@@ -286,7 +286,7 @@ void MultiMakeCardsAndWS_peak(){
 	  	bool dontfit=false;
 
                 //get peak normalization
-                TFile* peak_ws = TFile::Open("shape_peaks/ws_jpsi_"+year[y]+".root", "READ");
+                TFile* peak_ws = TFile::Open("shape_peaks/ws_psi_"+year[y]+".root", "READ");
                 RooWorkspace *w_peak = (RooWorkspace*)peak_ws->Get("dpworkspace");
                 w_peak->var("alphaL")->setConstant(true);
                 w_peak->var("frac_gau")->setConstant(true);
@@ -295,8 +295,8 @@ void MultiMakeCardsAndWS_peak(){
                 w_peak->var("n")->setConstant(true);
                 w_peak->var("res_rel")->setConstant(true);
                 RooRealVar *n_exp_peak = (RooRealVar*)w_peak->var("nsig");
-                //RooAddPdf *peakModel = (RooAddPdf*)w_peak->pdf("sig");
-                RooCBShape *peakModel = (RooCBShape*)w_peak->pdf("sig_CB"); 
+                RooAddPdf *peakModel = (RooAddPdf*)w_peak->pdf("sig");
+                //RooCBShape *peakModel = (RooCBShape*)w_peak->pdf("sig_CB"); 
                 RooRealVar *x_peak = (RooRealVar*)w_peak->var("m2mu");
                 x_peak->setRange("r1",massLow,massHigh);
                 RooAbsReal* intX = peakModel->createIntegral(*x_peak,NormSet(*x_peak),Range("r1"));
@@ -305,7 +305,7 @@ void MultiMakeCardsAndWS_peak(){
                 cout << "norm_peak=" << norm_peak << endl;
                 double frac_peak = norm_peak/catA->Integral();
                 cout << "frac_peak=" << frac_peak << endl;
-                RooRealVar frac_peak_fit("frac_peak","frac_peak",frac_peak,0,0.5);  
+                RooRealVar frac_peak_fit("frac_peak","frac_peak",frac_peak,0,10*frac_peak);  
                 //frac_peak_fit.setConstant(true);              
 
                 cout << "massLow=" << massLow << " high=" << massHigh << endl;   

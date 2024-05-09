@@ -15,10 +15,10 @@ if year == "2017":
         lumi = 35.3
 
 if idx_CR == "1":
-        file = "1.584_207"
+        file = "1.584_415"
         backname="dkk"
 if idx_CR == "2":
-        file = "1.716_215"        
+        file = "1.716_431"        
         backname="dkpi"
 #file = "1.716_215"
 mass = file[:5]
@@ -71,8 +71,8 @@ c1.SetFillStyle(4000)
 
 hframe = TH2F("hframe","hframe",500,xmin,xmax,500,0.8*ymin,1.2*ymax);
 
-hframe.SetYTitle("Events / 0.002 GeV");
-hframe.SetXTitle("m_{#mu#mu} [GeV]");
+hframe.SetYTitle("Events / 2 MeV");
+hframe.SetXTitle("#it{m_{#mu#mu}} [GeV]");
 
 hframe.GetXaxis().SetLabelSize(20);
 hframe.GetXaxis().SetLabelFont(43);
@@ -173,17 +173,23 @@ leg2.SetTextSize(0.09)
 leg2.SetFillColor(kWhite)
 
 if idx_CR == "1":
-    leg2.AddEntry( dkkLegend, "D#rightarrow KK", "L")
+    leg2.AddEntry( dkkLegend, "D #rightarrow KK", "L")
 if idx_CR == "2":
-    leg2.AddEntry( dkpLegend, "D#rightarrow K#pi","L")
+    leg2.AddEntry( dkpLegend, "D #rightarrow K#pi","L")
 
 
 leg.Draw("same")
 
-cmsTag=TLatex(0.22,0.93,"#scale[1.2]{CMS}")
+cmsTag=TLatex(0.18,0.86,"#scale[1.0]{CMS}")
 cmsTag.SetNDC()
 cmsTag.SetTextAlign(11)
 cmsTag.Draw()
+
+cmsTag2=TLatex(0.18,0.82,"#scale[0.8]{#bf{#it{Supplementary}}}")
+#cmsTag2=TLatex(0.35,0.93,"#scale[1.0]{#bf{#it{Preliminary}}}")
+cmsTag2.SetNDC()
+cmsTag2.SetTextAlign(11)
+cmsTag2.Draw()
 
 cmsTag3=TLatex(0.92,0.93,"#scale[0.65]{#bf{"+str(lumi)+" fb^{-1} (13 TeV)}}")
 cmsTag3.SetNDC()
@@ -195,14 +201,14 @@ latex4.SetNDC();
 latex4.SetTextSize(0.04);
 latex4.SetTextAlign(33);
 h_string4 = "Control region";
-latex4.DrawLatex(0.5,0.57, h_string4);
+latex4.DrawLatex(0.5,0.58, h_string4);
 
 latex5 = TLatex();
 latex5.SetNDC();
 latex5.SetTextSize(0.04);
 latex5.SetTextAlign(33);
-h_string5 = "3.5#sigma_{L} < L < 11#sigma_{L}";
-latex5.DrawLatex(0.5,0.52, h_string5);
+h_string5 = "3.5 < L_{xy}/#sigma_{L_{xy}}< 11";
+latex5.DrawLatex(0.5,0.53, h_string5);
 
 
 ratioPad = TPad("BottomPad","",0.,0.08,1.,0.45);

@@ -1,17 +1,19 @@
-import os
+import os,sys
 from ROOT import *
 gSystem.AddIncludePath("-I$CMSSW_BASE/src/ ")
 gSystem.Load("$CMSSW_BASE/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so")
 gSystem.AddIncludePath("-I$ROOFITSYS/include")
 gSystem.AddIncludePath("-Iinclude/")
                                                       
-year="2017"
-file = "1.716_215"
-#file = "1.733_216"
+year = sys.argv[1]
+file = "1.716_431"
+#file = "1.716_215"
+#file = "1.733_433"
+
 mass = file[:5]
 
-os.system("combine -M MultiDimFit -d output_dual/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.1,5 --cminDefaultMinimizerStrategy 0  -n SB -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
-os.system("combine -M MultiDimFit -d output_dual/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.001,0.002 --cminDefaultMinimizerStrategy 0  -n Bonly -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
+os.system("combine -M MultiDimFit -d output_dual/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.001,5 --cminDefaultMinimizerStrategy 0  -n SB -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
+os.system("combine -M MultiDimFit -d output_dual/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.0001,0.002 --cminDefaultMinimizerStrategy 0  -n Bonly -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
 
 
 f = TFile("higgsCombineSB.MultiDimFit.mH"+mass+".root","READ")
@@ -230,6 +232,6 @@ line1.SetLineWidth(1);
 line1.Draw("same");
 
 
-c1.SaveAs("test3_m"+mass+".png");
+c1.SaveAs("test3_m"+mass+"_"+year+".png");
 #c1.SaveAs("test_m1.584.pdf");
-c1.SaveAs("test3_m"+mass+"_combinedBKG.pdf");
+c1.SaveAs("test3_m"+mass+"_"+year+".pdf");

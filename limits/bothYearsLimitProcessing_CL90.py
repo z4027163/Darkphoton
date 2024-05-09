@@ -8,7 +8,7 @@ from shutil import move
 test = False
 
 year = "2017"
-#os.makedirs("combine_output/bothYears")
+os.makedirs("combine_output/CL90")
 
 files = glob("output/dpCard_"+year+"IterV3_*.txt")
 for fname in files:

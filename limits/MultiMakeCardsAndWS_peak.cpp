@@ -226,7 +226,7 @@ void MultiMakeCardsAndWS_peak(){
         int kk=5;
        
         //og for(int i=160; i<370; i++) 
-	for(int i=257; i<265; i++){
+	for(int i=257; i<263; i++){
                 double pvd_scale=1;
              
 	  	//get the histograms

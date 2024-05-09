@@ -580,7 +580,15 @@ void MultiMakeCardsAndWS(){
 		newcardShape << Form("rate    		%f  		%f		\n",
 				     effcuts*effgraph->Eval(mass,0,"S")*luminosity*rescale[kk]*pvd_scale, catA->Integral());
 		//newcardShape << Form("lumi13TeV_2017 lnN 	1.023 	-\n");
-		newcardShape << Form("lumi13TeV_2018 lnN 	1.026 	-\n");
+		//newcardShape << Form("lumi13TeV_2018 lnN 	1.026 	-\n");
+                if (year[y] == "2017"){
+                  newcardShape << Form("lumi13TeV_2017 lnN      1.020   -\n");
+                  newcardShape << Form("lumi13TeV_corr lnN      1.011   -\n");
+                }
+                if (year[y] == "2018"){
+                  newcardShape << Form("lumi13TeV_2018 lnN      1.015   -\n");
+                  newcardShape << Form("lumi13TeV_corr lnN      1.020   -\n");
+                }		
 		newcardShape << Form("id_eff_mva_2018 lnN	%f 	-\n", selSys);
 		newcardShape << Form("eff_trig_2018 lnN         %f        -\n", triggSys);
                 double eff_cut_unc=1.05; // ID eff entanglement
@@ -595,7 +603,7 @@ void MultiMakeCardsAndWS(){
 		if (year[y] == "2018"){
 		  newcardShape << Form("bkg_norm_2018 rateParam CatAB bkg_mass 1.0\n");
 		}
-                newcardShape << Form("res_rel_generic param 0.013 0.002\n");
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
 		newcardShape << Form("");
 
 		newcardShape.close();

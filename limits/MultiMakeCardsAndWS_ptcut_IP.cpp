@@ -589,7 +589,7 @@ void MultiMakeCardsAndWS_ptcut_IP(){
 		if (year[y] == "2018"){
 		  newcardShape << Form("bkg_norm_2018 rateParam CatAB bkg_mass 1.0\n");
 		}
-                //newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
 		newcardShape << Form("");
 
 		newcardShape.close();

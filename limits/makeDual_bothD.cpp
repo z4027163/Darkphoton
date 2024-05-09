@@ -575,10 +575,8 @@ void makeDual_bothD(){
                 newcardShape << Form("dkpi_ratio lnN            -    -   -    1.25  \n");
                 newcardShape << Form("sig_ratio lnN            -    -    -     -  \n"); 
 		newcardShape << Form("bkg_norm_"+year[y]+" rateParam CatAB bkg_mass 1.0\n");
-               // newcardShape << Form("dkk_norm_"+year[y]+" rateParam * dkk_mass 1.0 [0.2,5]\n");
-                //newcardShape << Form("dkpi_norm_"+year[y]+" rateParam * dkpi_mass 1.0 [0.2,5]");
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
 		newcardShape.close();
 
 	}

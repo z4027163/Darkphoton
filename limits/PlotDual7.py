@@ -1,16 +1,17 @@
-import os
+import os,sys
 from ROOT import *
 gSystem.AddIncludePath("-I$CMSSW_BASE/src/ ")
 gSystem.Load("$CMSSW_BASE/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so")
 gSystem.AddIncludePath("-I$ROOFITSYS/include")
 gSystem.AddIncludePath("-Iinclude/")
-                                                      
-year="2017"
-file = "1.858_223"
+
+year = sys.argv[1]                                                      
+#file = "1.858_223"
+file = "1.858_447"
 #file = "1.733_216"
 mass = file[:5]
 
-os.system("combine -M MultiDimFit -d output_dual/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.1,5 --cminDefaultMinimizerStrategy 0  -n SB -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
+os.system("combine -M MultiDimFit -d output_dual/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.01,5 --cminDefaultMinimizerStrategy 0  -n SB -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
 os.system("combine -M MultiDimFit -d output_dual/dpCard_"+year+"IterV3_m"+file+".txt --algo none --setParameters r=0.0 --setParameterRanges r=0.001,0.002 --cminDefaultMinimizerStrategy 0  -n Bonly -m "+mass+" --X-rtd REMOVE_CONSTANT_ZERO_POINT=1 --X-rtd MINIMIZER_freezeDisassociatedParams --cminRunAllDiscreteCombinations --cminDefaultMinimizerTolerance=0.001 --saveWorkspace")
 
 
@@ -97,11 +98,11 @@ bkgpdf.plotOn(frame, RooFit.LineColor(8), RooFit.Name("new_pdf"));
 bkgpdf1 = w.pdf("shapeBkg_bkg_mass_CatAB")
 bkgpdf1.plotOn(frame, RooFit.LineColor(4), RooFit.Name("new_pdf_2"));
 
-bkgpdf2 = w.pdf("shapeBkg_dmm_mass_CatAB")
-ndmm = w.function("n_exp_binCatAB_proc_dmm_mass").getVal()
+bkgpdf2 = w.pdf("shapeBkg_dpp_mass_CatAB")
+ndpp = w.function("n_exp_binCatAB_proc_dpp_mass").getVal()
 
 
-print "ndmm_catAB=", ndmm
+print "ndpp_catAB=", ndpp
 
 frame2=m2mu.frame()
 sigpdf = w.pdf("shapeSig_signalModel_generic_CatAB")
@@ -109,11 +110,11 @@ nsig = w.function("n_exp_binCatAB_proc_signalModel_generic").getVal()
 #sigpdf.plotOn(frame2, RooFit.LineColor(kOrange+1), RooFit.Name("sig_pdf"), RooFit.Normalization(nsig,RooAbsReal.NumEvent))
 
 frac1=w.function("n_exp_binCatAB_proc_signalModel_generic")
-frac2=w.function("n_exp_binCatAB_proc_dmm_mass")
+frac2=w.function("n_exp_binCatAB_proc_dpp_mass")
 #bkgpdf2.plotOn(frame2, RooFit.LineColor(8), RooFit.Name("new_pdf"),RooFit.Normalization(ndkpi,RooAbsReal.NumEvent))
-addpeak = RooAddPdf("peak", "sig+dmm", RooArgList(sigpdf,bkgpdf2),  RooArgList(frac1,frac2))
-addpeak.plotOn(frame2, RooFit.LineColor(kOrange+1), RooFit.Name("sig_pdf"), RooFit.Normalization(nsig+ndmm,RooAbsReal.NumEvent))
-bkgpdf2.plotOn(frame2, RooFit.LineColor(8), RooFit.Name("dmm_pdf"),RooFit.Normalization(ndmm,RooAbsReal.NumEvent));
+addpeak = RooAddPdf("peak", "sig+dpp", RooArgList(sigpdf,bkgpdf2),  RooArgList(frac1,frac2))
+addpeak.plotOn(frame2, RooFit.LineColor(kOrange+1), RooFit.Name("sig_pdf"), RooFit.Normalization(nsig+ndpp,RooAbsReal.NumEvent))
+bkgpdf2.plotOn(frame2, RooFit.LineColor(8), RooFit.Name("dpp_pdf"),RooFit.Normalization(ndpp,RooAbsReal.NumEvent));
 
 
 testpdf   = bkgpdf1 .createHistogram("testpdf"  , m2mu, RooFit.Binning(nbins, xmin, xmax));
@@ -150,8 +151,8 @@ print "doFit:  mychi^2 s+b = "+str(mychi2sb)
 print "doFit:  mychi^2/(nbins-noofparm-1) = "+str(mychi2_final)
 print "doFit:  RooPlot chi^2/(nbins-noofparm-1) = "+str(RooPlot_chi2)
 print "doFit:  RooPlot s+b chi^2/(nbins-noofparm-1) = "+str(RooPlot_chi2_sb)
-print "ndmm_highip=",w.function("n_exp_binhighip_proc_dmm_mass").getVal()
-print "ndmm_catAB=",ndmm
+print "ndpp_highip=",w.function("n_exp_binhighip_proc_dpp_mass").getVal()
+print "ndpp_catAB=",ndpp
 #binmax = testhisto.GetMaximumBin(); 
 #max_entry = testhisto.GetBinContent(binmax);
 #max_entry += max_entry/10.;
@@ -223,6 +224,6 @@ line1.SetLineWidth(1);
 line1.Draw("same");
 
 
-c1.SaveAs("test3_m"+mass+".png");
+c1.SaveAs("test3_m"+mass+"_"+year+".png");
 #c1.SaveAs("test_m1.584.pdf");
-c1.SaveAs("test3_m"+mass+"_combinedBKG.pdf");
+c1.SaveAs("test3_m"+mass+"_"+year+".pdf");

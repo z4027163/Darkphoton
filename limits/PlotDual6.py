@@ -1,14 +1,15 @@
-import os
+import os,sys
 from ROOT import *
 gSystem.AddIncludePath("-I$CMSSW_BASE/src/ ")
 gSystem.Load("$CMSSW_BASE/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so")
 gSystem.AddIncludePath("-I$ROOFITSYS/include")
 gSystem.AddIncludePath("-Iinclude/")
                                                       
-file = "1.716_215"
+file = "1.716_431"
 #file = "1.733_216"
+#file = "1.733_433"
 
-year="2017"
+year = sys.argv[1]
 mass = file[:5]
 
 f = TFile("higgsCombineSB.MultiDimFit.mH"+mass+".root","READ")
@@ -242,6 +243,6 @@ line1.SetLineWidth(1);
 line1.Draw("same");
 
 
-c1.SaveAs("test4_m"+mass+".png");
+c1.SaveAs("test4_m"+mass+"_"+year+".png");
 #c1.SaveAs("test_m1.584.pdf");
-c1.SaveAs("test4_m"+mass+"_combinedBKG.pdf");
+c1.SaveAs("test4_m"+mass+"_"+year+".pdf");

@@ -566,8 +566,8 @@ void makeDual_kk(){
 		  newcardShape << Form("bkg_norm_2018 rateParam CatAB bkg_mass 1.0\n");
               //    newcardShape << Form("dkk_norm_2018 rateParam * dkk_mass 1.0 [0.2,5]");
 		}
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
 		newcardShape.close();
 
 	}

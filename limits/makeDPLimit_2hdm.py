@@ -16,8 +16,8 @@ from math import sqrt
 
 year = sys.argv[1]
 
-fff = open("sentheta.txt", "w")
-#fff2 = open("eps2_obs.txt", "w")
+fff_obs = open("limit_2hdm_obs.txt", "w")
+fff_exp = open("limit_2hdm_exp.txt", "w")
 
 
 limit1=array('d')
@@ -106,11 +106,12 @@ base_eps = 0.02 #epsilon for which the cross sections are computed
 
 a = 1 # for lumi projection (6.6->100)
 
-files = glob("ptcut/IPsig/combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
+files = glob("FINAL/boosted/combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
+#files = glob("combine_output/"+year+"/higgsCombineasympMassIndex_*.AsymptoticLimits.mH*.root")
 
 d_m = {}
 for fname in files:
-        m = float(re.search(r"mH(\d+\.?\d+).root", fname).group(1))
+        m = float(re.search(r"mH(.*?)\.root", fname).group(1))
         d = int(re.search(r"Index_(\d+).Asymptotic", fname).group(1))
         d_m[d] = [m, fname]
 
@@ -136,7 +137,7 @@ for d,m_fname in d_m:
     unc_dow = sqrt(unc_dow*unc_dow+0.3*0.3)
 
 
-    if (m < 3):
+    if (m < 3 and m > 1.17):
             f=ROOT.TFile.Open(fname)
             tree=f.Get("limit")
             tree.GetEntry(2)
@@ -167,9 +168,9 @@ for d,m_fname in d_m:
             tree=f.Get("limit")
             mass1.append(m)
             masserr1.append(0.)
-#            fff.write("{0} {1}\n".format(m, math.sqrt(tree.limit*a)))
-#            fff.write("{0} {1}\n".format(m, a_exp))
-            fff.write("{0} {1}\n".format(m, a_obs))
+            #fff.write("{0} {1}\n".format(m, math.sqrt(tree.limit*a)))
+            fff_exp.write("{0} {1}\n".format(m, a_exp))
+            fff_obs.write("{0} {1}\n".format(m, a_obs))
             
     if (m > 3):
             f=ROOT.TFile.Open(fname)
@@ -203,9 +204,9 @@ for d,m_fname in d_m:
             tree=f.Get("limit")
             mass2.append(m)
             masserr2.append(0.)
-#            fff.write("{0} {1}\n".format(m, math.sqrt(tree.limit*a)))
-#            fff.write("{0} {1}\n".format(m, a_exp))
-            fff.write("{0} {1}\n".format(m, a_obs))   
+            fff_exp.write("{0} {1}\n".format(m, a_exp))
+            fff_obs.write("{0} {1}\n".format(m, a_obs))
+
 
 c1=ROOT.TCanvas("c1","c1",700,500)
 #c1.SetGrid()
@@ -248,6 +249,7 @@ graph_limit2.SetLineStyle(2)
 graph_limit195up=ROOT.TGraphAsymmErrors(len(mass1),mass1,limit1,masserr1,masserr1,limit195up,limit195down)
 graph_limit195up.SetTitle("graph_limit195up")
 graph_limit195up.SetFillColor(ROOT.TColor.GetColor(252,241,15))
+graph_limit195up.SetLineColor(ROOT.TColor.GetColor(252,241,15))
 
 graph_limit295up=ROOT.TGraphAsymmErrors(len(mass2),mass2,limit2,masserr2,masserr2,limit295up,limit295down)
 graph_limit295up.SetTitle("graph_limit295up")
@@ -258,13 +260,13 @@ graph_limit168up=ROOT.TGraphAsymmErrors(len(mass1),mass1,limit1,masserr1,masserr
 graph_limit168up.SetTitle("graph_limit168up")
 graph_limit168up.SetMarkerColor(kGreen)
 graph_limit168up.SetFillColor(kGreen);
-
+graph_limit168up.SetLineColor(kGreen);
 
 graph_limit1_unc=ROOT.TGraphAsymmErrors(len(mass1),mass1,limit1Observed,masserr1,masserr1,limit1Observed_up_rel,limit1Observed_dow_rel)
 graph_limit1_unc.SetTitle("graph_limit1_unc")
 graph_limit1_unc.SetFillColorAlpha(15, 0.7);
 #graph_limit1_unc.SetLineWidth(-802);
-#graph_limit1_unc.SetLineColor(15)
+graph_limit1_unc.SetLineColorAlpha(15,0.7)
 
 graph_limit2_unc=ROOT.TGraphAsymmErrors(len(mass2),mass2,limit2Observed,masserr2,masserr2,limit2Observed_up_rel,limit2Observed_dow_rel)
 graph_limit2_unc.SetTitle("graph_limit2_unc")
@@ -312,14 +314,14 @@ mg.Add(graph_limitObs2,"l")
 
 
 mg.Draw("APC")
-mg.GetXaxis().SetRangeUser(1.2,9.)
+mg.GetXaxis().SetRangeUser(1.16,9.)
 mg.GetYaxis().SetRangeUser(0.002,10.99)
 #mg.GetYaxis().SetTitle("xSec*BR [pb]")
 #mg.GetXaxis().SetTitle("Dark Photon Mass [GeV]")
-mg.GetYaxis().SetTitle("sin(#theta_{H})")
+mg.GetYaxis().SetTitle("sin(#it{#theta}_{H})")
 mg.GetYaxis().SetTitleOffset(1.0)
 mg.GetYaxis().SetTitleSize(0.05)
-mg.GetXaxis().SetTitle("m_{a} [GeV]")
+mg.GetXaxis().SetTitle("#it{m_{a}} [GeV]")
 mg.GetXaxis().SetTitleSize(0.05)
 mg.GetXaxis().SetTitleOffset(1.2)
 mg.GetXaxis().SetMoreLogLabels()
@@ -331,30 +333,32 @@ mg.GetXaxis().SetLabelOffset(0.0);
 c1.SetBottomMargin(0.13);
 c1.Update()
 legend=ROOT.TLegend(0.5,0.6,0.8,0.9)
-cmsTag=ROOT.TLatex(0.13,0.917,"#scale[1.1]{CMS}")
+cmsTag=ROOT.TLatex(0.13,0.83,"#scale[1.2]{CMS}")
 cmsTag.SetNDC()
 cmsTag.SetTextAlign(11)
 cmsTag.Draw()
-cmsTag2=ROOT.TLatex(0.215,0.917,"#scale[0.825]{#bf{#it{Preliminary}}}")
+#cmsTag2=ROOT.TLatex(0.215,0.917,"#scale[1.0]{#bf{#it{Preliminary}}}")
+cmsTag2=ROOT.TLatex(0.23,0.83,"#scale[1.0]{#bf{#it{Supplementary}}}")
 cmsTag2.SetNDC()
 cmsTag2.SetTextAlign(11)
 #cmsTag.SetTextFont(61)
-#cmsTag2.Draw()
+cmsTag2.Draw()
 cmsTag3=ROOT.TLatex(0.90,0.917,"#scale[0.9]{#bf{"+str(lumi)+" fb^{-1} (13 TeV)}}")
 cmsTag3.SetNDC()
 cmsTag3.SetTextAlign(31)
 #cmsTag.SetTextFont(61)
 cmsTag3.Draw()
-leg=ROOT.TLegend(0.60, 0.54,0.80, 0.85)  
+leg=ROOT.TLegend(0.55, 0.54,0.80, 0.85)  
 leg.SetBorderSize( 0 )
 leg.SetFillStyle( 1001 )
 leg.SetFillColor(kWhite) 
 leg.SetTextSize(0.05)
 leg.AddEntry( graph_limitObs1 , "Observed",  "LP" )
-leg.AddEntry( graph_limit1 , "Expected",  "L" )
-leg.AddEntry( graph_limit168up, "#pm 1#sigma",  "F" ) 
-leg.AddEntry( graph_limit195up, "#pm 2#sigma",  "F" ) 
+leg.AddEntry( graph_limit1 , "Median expected",  "L" )
+leg.AddEntry( graph_limit168up, "68% expected",  "F" )
+leg.AddEntry( graph_limit195up, "95% expected",  "F" )
 leg.AddEntry( graph_limit1_unc, "theoretical #pm 1#sigma",  "F" )
+
 
 #qier
 tail=""

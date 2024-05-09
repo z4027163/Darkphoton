@@ -554,6 +554,7 @@ void makeDual_1(){
                 newcardShape << Form("pdf_index_"+year[y]+" discrete \n");
                 newcardShape << Form("dkk_ratio lnN            -    -   1.20  -   -    -\n");
                 newcardShape << Form("sig_ratio lnN            -    -    -   1.20   -   -\n");
+                newcardShape << Form("res_rel_generic param 0.013 0.0026\n");
 		if (year[y] == "2017"){
 		  newcardShape << Form("bkg_norm_2017 rateParam CatAB bkg_mass 1.0\n");
                   newcardShape << Form("bkg_norm2_2017 rateParam highip bkg_mass 1.0\n");
@@ -565,7 +566,6 @@ void makeDual_1(){
                   newcardShape << Form("dkk_norm_2018 rateParam * dkk_mass 1.0 [0.2,5]");
 		}
 
-		//newcardShape << Form("resA param %f %f\n",resA.getValV(),resA.getValV()*0.1);
 		newcardShape.close();
 
 	}

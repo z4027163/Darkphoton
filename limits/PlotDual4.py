@@ -1,14 +1,23 @@
-import os
+import os,sys
 from ROOT import *
 gSystem.AddIncludePath("-I$CMSSW_BASE/src/ ")
 gSystem.Load("$CMSSW_BASE/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so")
 gSystem.AddIncludePath("-I$ROOFITSYS/include")
 gSystem.AddIncludePath("-Iinclude/")
                                                       
-
-file = "1.584_207"
+year = sys.argv[1]
+#file = "1.584_207"
+file = "1.584_415"
+#file = "1.590_105"
+#file = "1.580_104"
 #file = "1.733_216"
 mass = file[:5]
+
+if mass[-1] == '0':
+    mass = mass[:-1]
+if mass[-1] == '0':
+    mass = mass[:-1]
+
 
 f = TFile("higgsCombineSB.MultiDimFit.mH"+mass+".root","READ")
 fb = TFile("higgsCombineBonly.MultiDimFit.mH"+mass+".root","READ")
@@ -183,7 +192,7 @@ latex4 = TLatex();
 latex4.SetNDC();
 latex4.SetTextSize(0.03);
 latex4.SetTextAlign(33);
-h_string4 = "2017 3.5<IPsig<11.0";
+h_string4 = year+" 3.5<IPsig<11.0";
 latex4.DrawLatex(0.5,0.87, h_string4);
 
 #paramList = pdf.getParameters(m2mu);
@@ -240,7 +249,6 @@ line1.SetLineColor(kBlack);
 line1.SetLineWidth(1);
 line1.Draw("same");
 
+c1.SaveAs("test_cr_m"+mass+"_"+year+".png");
+c1.SaveAs("test_cr_m"+mass+"_"+year+".pdf");
 
-c1.SaveAs("test4_m"+mass+".png");
-#c1.SaveAs("test_m1.584.pdf");
-c1.SaveAs("test4_m"+mass+"_combinedBKG.pdf");
